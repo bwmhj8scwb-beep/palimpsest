@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Palimpsest — A Land Rewritten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Frank+Ruhl+Libre:wght@400;500;700&family=Amiri:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+:root{
+  --leather:#16110b; --leather2:#1f160d;
+  --vellum:#e9ddc1; --vellum-sh:#d6c6a0;
+  --ink:#33271a; --ink-soft:#5d4d38; --ink-faint:#9a8666;
+  --gilt:#b3862c; --gilt-lt:#dba93b;
+  --line:rgba(120,95,55,0.30);
+}
+html,body{ background:var(--leather); color:var(--vellum); font-family:'EB Garamond',Georgia,serif; min-height:100svh; overflow-x:hidden; }
+body{ background:
+  radial-gradient(ellipse 90% 50% at 50% -5%, rgba(179,134,44,.10), transparent 60%),
+  radial-gradient(ellipse 70% 60% at 50% 120%, rgba(120,80,40,.10), transparent 60%),
+  var(--leather); font-size:18px; }
+
+/* HEADER */
+.hd{ text-align:center; padding:1.5rem 1.1rem .5rem; }
+.kk{ font-family:'Inter',sans-serif; font-size:.64rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gilt); opacity:.85; margin-bottom:.55rem; }
+.ttl{ font-weight:600; font-size:clamp(2rem,7.5vw,2.9rem); line-height:1; color:var(--vellum); }
+.ttl em{ font-style:italic; color:var(--gilt-lt); }
+.scripts{ margin:.55rem 0 .15rem; color:var(--ink-faint); font-size:clamp(1.05rem,3.8vw,1.3rem); display:flex; gap:.85rem; justify-content:center; align-items:baseline; flex-wrap:wrap; }
+.scripts span{ opacity:.8; }
+.he{ font-family:'Frank Ruhl Libre',serif; } .ar{ font-family:'Amiri',serif; }
+.sub{ font-style:italic; color:var(--ink-faint); font-size:clamp(.98rem,3.3vw,1.12rem); line-height:1.5; max-width:32rem; margin:.55rem auto 0; }
+.top-actions{ display:flex; justify-content:center; flex-wrap:wrap; gap:.45rem; margin-top:.8rem; }
+.about-btn{ background:none; border:1px solid var(--line); color:var(--ink-faint); font-family:'Inter',sans-serif; font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; padding:.48rem .95rem; border-radius:2rem; cursor:pointer; transition:.2s; }
+.about-btn:hover,.about-btn.on{ color:var(--vellum); border-color:var(--gilt); background:rgba(179,134,44,.08); }
+
+/* TIMELINE */
+.rail{ display:flex; gap:.42rem; overflow-x:auto; scroll-snap-type:x proximity; padding:.7rem 1rem 1rem; scrollbar-width:none; }
+.rail::-webkit-scrollbar{ display:none; }
+.chip{ scroll-snap-align:center; flex:0 0 auto; background:var(--leather2); border:1px solid var(--line); border-radius:.55rem; padding:.55rem .75rem; min-width:84px; cursor:pointer; transition:.22s; position:relative; text-align:left; }
+.chip:hover{ border-color:var(--ink-faint); }
+.chip .cyr{ font-family:'Inter',sans-serif; font-size:.62rem; letter-spacing:.03em; color:var(--ink-faint); display:block; margin-bottom:.14rem; white-space:nowrap; }
+.chip .cnm{ font-size:.92rem; color:var(--vellum-sh); line-height:1.04; white-space:nowrap; }
+.chip.on{ background:#241a0f; }
+.chip.on .cnm{ color:var(--gilt-lt); }
+.chip .swatch{ position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:0 0 .5rem .5rem; opacity:.55; }
+.chip.on .swatch{ opacity:1; }
+.voice-ribbon{ display:flex; gap:.42rem; overflow-x:auto; scrollbar-width:none; padding:0 1rem .85rem; }
+.voice-ribbon::-webkit-scrollbar{ display:none; }
+.voice-dot{ flex:0 0 auto; min-width:4.8rem; background:rgba(31,22,13,.74); border:1px solid var(--line); color:var(--vellum-sh); border-radius:.48rem; padding:.38rem .46rem .42rem; cursor:pointer; text-align:left; transition:.2s; }
+.voice-dot:hover,.voice-dot.on{ border-color:var(--gilt); color:#fff1c8; background:#241a0f; }
+.voice-dot .emo{ display:block; font-size:1.15rem; line-height:1; margin-bottom:.14rem; }
+.voice-dot .yr{ display:block; font-family:'Inter',sans-serif; font-size:.54rem; letter-spacing:.06em; color:var(--ink-faint); white-space:nowrap; }
+
+/* STAGE */
+.stage{ max-width:560px; margin:0 auto; padding:0 1rem; }
+.era-head{ text-align:center; padding:.5rem 0 .2rem; min-height:3.6rem; }
+.era-range{ font-family:'Inter',sans-serif; font-size:.86rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gilt-lt); font-weight:500; margin-bottom:.22rem; }
+.era-name{ font-weight:600; font-style:italic; font-size:clamp(1.55rem,6vw,2.05rem); color:var(--vellum); line-height:1.05; }
+
+.map-panel{ position:relative; margin:.55rem auto .2rem; max-width:440px;
+  background: radial-gradient(ellipse 120% 120% at 30% 18%, #f1e7cf, transparent 55%), radial-gradient(ellipse 130% 130% at 78% 88%, #d9c8a0, transparent 60%), var(--vellum);
+  border-radius:9px 14px 10px 13px; padding:.4rem;
+  box-shadow:0 1px 0 rgba(255,255,255,.18) inset, 0 0 0 1px rgba(120,90,50,.30), 0 14px 40px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4); }
+.map-panel::before{ content:''; position:absolute; inset:5px; border:1px solid rgba(120,90,50,.22); border-radius:6px 10px 7px 9px; pointer-events:none; }
+#map{ display:block; width:100%; height:auto; }
+.map-tools{ position:absolute; right:1rem; top:1rem; z-index:5; display:flex; gap:.35rem; flex-wrap:wrap; justify-content:flex-end; max-width:52%; }
+.map-tool{ border:1px solid rgba(80,60,30,.38); background:rgba(246,235,205,.72); color:#3a2c1a; font-family:'Inter',sans-serif; font-size:.56rem; letter-spacing:.13em; text-transform:uppercase; border-radius:.38rem; padding:.42rem .54rem; cursor:pointer; box-shadow:0 3px 12px rgba(0,0,0,.18); backdrop-filter:blur(3px); }
+.map-tool.on{ background:rgba(61,39,13,.88); color:#ffe5a3; border-color:rgba(219,169,59,.65); }
+.pop-card{ position:absolute; left:.7rem; top:.7rem; z-index:4; width:min(11.5rem,43%); background:rgba(245,234,207,.9); color:#352719; border:1px solid rgba(120,90,50,.30); border-radius:.5rem; padding:.5rem .62rem .56rem; box-shadow:0 7px 22px rgba(0,0,0,.2); backdrop-filter:blur(3px); }
+.pop-card .pk{ font-family:'Inter',sans-serif; font-size:.58rem; letter-spacing:.16em; text-transform:uppercase; color:#8a6421; margin-bottom:.2rem; }
+.pop-card .maj{ font-weight:600; font-size:1.04rem; line-height:1.12; color:#23170d; }
+.pop-card .also{ font-family:'Inter',sans-serif; font-size:.72rem; line-height:1.4; color:#6d5a3c; margin-top:.28rem; }
+.pal-note{ display:block; position:absolute; right:.7rem; bottom:.85rem; z-index:5; width:min(13.5rem,50%); background:rgba(245,234,207,.95); color:#342518; border:1px solid rgba(120,90,50,.34); border-radius:.5rem; padding:.6rem .72rem; box-shadow:0 8px 22px rgba(0,0,0,.26); font-size:.86rem; line-height:1.4; }
+.pal-note.on{ display:block; }
+.pal-note b{ color:#1f160d; }
+
+.sea{ fill:#cdd6cf; }
+.landbase{ fill:#ded0ab; stroke:#9c8154; stroke-width:1; }
+.base-line{ fill:none; stroke:#a99062; stroke-width:1.25; opacity:.52; stroke-dasharray:3 5; }
+.base-lbl{ font-family:'Inter',sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; fill:#5c4d33; opacity:.86; pointer-events:none; paint-order:stroke; stroke:rgba(233,221,193,.82); stroke-width:2.9px; }
+.sea-lbl{ font-family:'EB Garamond',serif; font-style:italic; font-size:20px; fill:#536d70; opacity:.8; pointer-events:none; paint-order:stroke; stroke:rgba(233,221,193,.52); stroke-width:1.8px; }
+.compass{ display:none; pointer-events:none; opacity:.62; }
+.compass path{ fill:none; stroke:#6c5b3d; stroke-width:1.2; stroke-linecap:round; }
+.compass text{ font-family:'Inter',sans-serif; font-size:8px; letter-spacing:.12em; fill:#6c5b3d; text-anchor:middle; }
+.relief{ display:none; fill:none; stroke:#8d7651; stroke-width:.8; opacity:.22; }
+.deco{ pointer-events:none; }
+.deco-wave{ fill:none; stroke:#7e9598; stroke-width:1.4; stroke-linecap:round; opacity:.5; }
+.deco-ship{ fill:none; stroke:#6f5a3c; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:.66; }
+.deco-ship .sail{ fill:rgba(233,221,193,.55); }
+.deco-serpent{ fill:none; stroke:#6f8487; stroke-width:1.7; stroke-linecap:round; opacity:.5; }
+.deco-compass circle{ fill:none; stroke:#8a6f3f; stroke-width:1; opacity:.7; }
+.deco-compass .star{ fill:#b89554; opacity:.7; }
+.deco-compass .star2{ fill:#cdbb92; opacity:.55; }
+.deco-compass text{ font-family:'EB Garamond',serif; font-size:9px; fill:#8a6f3f; text-anchor:middle; opacity:.8; }
+.trade-good{ font-size:21px; text-anchor:middle; dominant-baseline:middle; opacity:.82; pointer-events:auto; cursor:pointer; filter:drop-shadow(0 1px 2px rgba(60,40,15,.3)); }
+.trade-good:hover,.trade-good:focus{ opacity:1; outline:none; }
+#map.geo-muted .deco{ opacity:.6; }
+.context-land{ stroke:none; }
+#map.geo-muted .base-lbl,#map.geo-muted .sea-lbl,#map.geo-muted .compass{ opacity:.26; }
+#map.geo-muted .base-line,#map.geo-muted .relief{ opacity:.08; }
+.river{ fill:none; stroke:#829b9e; stroke-width:3.2; stroke-linecap:round; opacity:.96; filter:drop-shadow(0 0 2px rgba(255,255,255,.35)); }
+.terr{ transition:opacity .5s ease, fill .5s ease; }
+.terr-lbl{ font-family:'EB Garamond',serif; font-style:italic; font-size:15px; fill:#4a3a24; opacity:.92; pointer-events:none; paint-order:stroke; stroke:rgba(233,221,193,.7); stroke-width:2.6px; }
+.city-hit{ fill:rgba(219,169,59,.001); stroke:rgba(179,134,44,.18); stroke-width:1.1; cursor:pointer; transition:.18s; }
+.city-hit:hover,.city-hit.act{ fill:rgba(219,169,59,.13); stroke:rgba(179,134,44,.56); }
+.dot{ fill:#3a2c1a; stroke:#e9ddc1; stroke-width:1.7; cursor:pointer; transition:.18s; filter:drop-shadow(0 1px 2px rgba(0,0,0,.24)); }
+.dot:hover, .dot.act{ fill:var(--gilt); r:6.4; stroke:#fff1c8; }
+.city-lbl{ font-family:'EB Garamond',serif; font-size:15.5px; fill:#2e2114; cursor:pointer; paint-order:stroke; stroke:rgba(233,221,193,.92); stroke-width:3.2px; }
+.city-lbl:hover{ fill:#000; }
+.holy{ fill:none; stroke:var(--gilt-lt); stroke-width:1.5; opacity:.9; }
+.flow-p{ stroke:rgba(255,255,255,.62); stroke-width:1.1; filter:drop-shadow(0 0 5px rgba(255,244,195,.76)); }
+.power-thread-bg{ fill:none; stroke:rgba(111,82,33,.16); stroke-width:6; stroke-linecap:round; }
+.power-thread{ fill:none; stroke:#c89a38; stroke-width:2.1; stroke-linecap:round; stroke-dasharray:1 10; opacity:.82; filter:drop-shadow(0 0 2px rgba(219,169,59,.45)); animation:threadMove 14s linear infinite; }
+.power-courier{ filter:drop-shadow(0 3px 5px rgba(72,45,13,.34)); }
+.power-courier .note{ fill:#fff0c4; stroke:#7b581b; stroke-width:1; }
+.power-courier .fold{ fill:none; stroke:#9b7429; stroke-width:.8; stroke-linecap:round; stroke-linejoin:round; }
+.power-courier .seal{ fill:#c97945; stroke:#6f3d21; stroke-width:.65; }
+.power-courier .carrier{ font-size:25px; text-anchor:middle; dominant-baseline:middle; paint-order:stroke; stroke:rgba(255,240,196,.9); stroke-width:3.5px; }
+.power-courier .carrier-mail{ font-size:16px; text-anchor:middle; dominant-baseline:middle; paint-order:stroke; stroke:rgba(255,240,196,.9); stroke-width:3px; }
+.power-pin{ fill:#f2c25d; stroke:#6f4b15; stroke-width:1.3; filter:drop-shadow(0 0 4px rgba(219,169,59,.48)); }
+.power-city{ font-family:'Inter',sans-serif; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; fill:#2d2114; paint-order:stroke; stroke:rgba(246,235,205,.94); stroke-width:3.5px; }
+.npc{ cursor:pointer; }
+.npc-halo{ fill:rgba(219,169,59,.30); stroke:rgba(255,235,176,.55); stroke-width:1; animation:npcPulse 2.8s ease-in-out infinite; }
+.npc-emoji{ font-size:35px; text-anchor:middle; dominant-baseline:middle; paint-order:stroke; stroke:rgba(255,248,226,.92); stroke-width:4px; filter:drop-shadow(0 2px 5px rgba(0,0,0,.38)); pointer-events:none; }
+.npc:hover .npc-halo,.npc.act .npc-halo{ fill:rgba(219,169,59,.48); stroke:rgba(255,235,176,.9); }
+.sacred-node{ cursor:pointer; }
+.sacred-glow{ fill:rgba(255,218,104,.2); stroke:#f2c25d; stroke-width:1.7; filter:drop-shadow(0 0 8px rgba(255,204,83,.8)); animation:holyGlow 3s ease-in-out infinite; }
+.sacred-hit{ fill:rgba(255,218,104,.001); stroke:none; }
+.sacred-icon{ font-size:29px; text-anchor:middle; dominant-baseline:middle; paint-order:stroke; stroke:rgba(255,248,226,.92); stroke-width:3.4px; pointer-events:none; }
+.sacred-lbl{ display:none; font-family:'Inter',sans-serif; font-size:7px; letter-spacing:.08em; text-transform:uppercase; fill:#3b2811; text-anchor:middle; paint-order:stroke; stroke:rgba(245,234,207,.92); stroke-width:2.4px; pointer-events:none; }
+.map-fact{ cursor:pointer; filter:drop-shadow(0 4px 8px rgba(48,30,12,.22)); }
+.map-fact rect{ fill:rgba(46,31,14,.78); stroke:rgba(255,225,145,.46); stroke-width:1; }
+.map-fact text{ pointer-events:none; }
+.map-fact .fi{ font-size:22px; text-anchor:middle; dominant-baseline:middle; }
+.map-fact .ft{ font-family:'Inter',sans-serif; font-size:9.8px; letter-spacing:.04em; text-transform:uppercase; fill:#fff0c4; font-weight:600; }
+.map-fact:hover rect{ fill:rgba(70,45,17,.9); stroke:#f0c760; }
+
+.power-card{ position:absolute; left:1rem; bottom:1rem; z-index:4; max-width:min(12.5rem,48%);
+  background:rgba(38,25,10,.82); border:1px solid rgba(219,169,59,.52); color:var(--vellum);
+  border-radius:.45rem; padding:.62rem .72rem .68rem; box-shadow:0 7px 22px rgba(0,0,0,.34), 0 0 18px rgba(179,134,44,.18); backdrop-filter:blur(3px); }
+.power-card .pk{ font-family:'Inter',sans-serif; font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gilt-lt); margin-bottom:.25rem; }
+.power-card .pcity{ font-weight:600; font-size:1.22rem; line-height:1.05; color:#fff4d0; }
+.power-card .pmeta{ font-family:'Inter',sans-serif; font-size:.72rem; line-height:1.42; color:#d4c49d; margin-top:.28rem; }
+.power-card .rule{ font-family:'Inter',sans-serif; font-size:.66rem; line-height:1.35; color:#ffe1a1; margin-top:.28rem; }
+.npc-bubble{ display:none; position:absolute; z-index:6; width:min(13rem,72%); transform:translate(-50%,calc(-100% - 14px));
+  background:rgba(245,234,207,.97); color:var(--ink); border:1px solid rgba(120,90,50,.34); border-radius:.55rem;
+  padding:.72rem .82rem .78rem; box-shadow:0 10px 28px rgba(0,0,0,.38); }
+.npc-bubble.on{ display:block; }
+.npc-bubble.below{ transform:translate(-50%,16px); }
+.npc-bubble::after{ content:''; position:absolute; left:50%; bottom:-8px; width:14px; height:14px; transform:translateX(-50%) rotate(45deg); background:rgba(245,234,207,.97); border-right:1px solid rgba(120,90,50,.34); border-bottom:1px solid rgba(120,90,50,.34); }
+.npc-bubble.below::after{ top:-8px; bottom:auto; border:0; border-left:1px solid rgba(120,90,50,.34); border-top:1px solid rgba(120,90,50,.34); }
+.npc-role{ font-weight:600; font-style:italic; font-size:1rem; line-height:1.15; color:#2a1f12; }
+.npc-text{ font-size:.95rem; line-height:1.42; color:#493723; margin-top:.35rem; }
+.npc-close{ position:absolute; top:.28rem; right:.42rem; border:0; background:none; color:#7e6542; font-size:1rem; line-height:1; cursor:pointer; }
+.pal-layer{ pointer-events:none; opacity:1; }
+.pal-chip rect{ fill:rgba(54,36,18,.70); stroke:rgba(255,225,145,.40); stroke-width:1; filter:drop-shadow(0 4px 10px rgba(0,0,0,.22)); }
+.pal-chip.active rect{ fill:rgba(94,62,18,.92); stroke:#f0c760; stroke-width:1.9; }
+.pal-chip.under rect{ fill:rgba(54,36,18,.58); stroke:rgba(255,225,145,.28); }
+.pal-chip text{ font-family:'EB Garamond',serif; fill:#fff0c4; font-size:15px; font-style:italic; font-weight:600; }
+.pal-chip .sub{ font-family:'Inter',sans-serif; fill:#d7bf82; font-size:6.5px; letter-spacing:.11em; text-transform:uppercase; font-style:normal; font-weight:500; }
+.pal-chip .date{ font-family:'Inter',sans-serif; fill:#bfa468; font-size:6px; letter-spacing:.08em; text-transform:uppercase; font-style:normal; font-weight:500; }
+.pal-chip.active .date,.pal-chip.active .sub{ fill:#ffe49b; }
+.pal-chip .tag{ font-family:'Inter',sans-serif; fill:#f4cc68; font-size:5.8px; letter-spacing:.16em; text-transform:uppercase; font-style:normal; font-weight:600; }
+.pal-thread{ fill:none; stroke:rgba(74,46,15,.30); stroke-width:1.4; stroke-dasharray:4 7; }
+@keyframes threadMove{ to{ stroke-dashoffset:-84; } }
+@keyframes npcPulse{ 0%,100%{ r:18; opacity:.55; } 50%{ r:24; opacity:.92; } }
+
+.leg{ display:flex; flex-wrap:wrap; justify-content:center; gap:.3rem .9rem; padding:.4rem 1rem .1rem; max-width:440px; margin:0 auto; }
+.leg .it{ display:flex; align-items:center; gap:.34rem; font-size:.78rem; color:var(--ink-faint); }
+.leg .sw{ width:12px; height:12px; border-radius:2px; flex:0 0 auto; opacity:.85; }
+.flowleg{ display:flex; flex-wrap:wrap; justify-content:center; gap:.3rem 1rem; padding:.3rem 1rem .1rem; max-width:440px; margin:0 auto; }
+.flowleg .it{ display:flex; align-items:center; gap:.36rem; font-size:.76rem; color:var(--ink-faint); }
+.flowleg .fd{ width:9px; height:9px; border-radius:50%; flex:0 0 auto; box-shadow:0 0 5px currentColor; }
+.maptip{ text-align:center; font-family:'Inter',sans-serif; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); opacity:.6; padding:.3rem 1rem .1rem; }
+
+.nav{ display:flex; justify-content:space-between; align-items:center; gap:.8rem; padding:.55rem .2rem .2rem; }
+.arrow{ flex:0 0 auto; background:var(--leather2); border:1px solid var(--line); color:var(--vellum-sh); font-family:'Inter',sans-serif; font-size:.72rem; letter-spacing:.06em; padding:.6rem 1rem; border-radius:.5rem; cursor:pointer; transition:.2s; }
+.arrow:hover{ border-color:var(--gilt); color:var(--gilt-lt); }
+.counter{ font-family:'Inter',sans-serif; font-size:.66rem; letter-spacing:.18em; color:var(--ink-faint); }
+
+/* NARRATIVE */
+.read{ max-width:40rem; margin:.4rem auto 0; padding:0 1.35rem 3.5rem; }
+.essence{ font-style:italic; font-size:clamp(1.18rem,4.6vw,1.42rem); line-height:1.5; color:var(--gilt-lt); text-align:center; padding:.8rem 0 1rem; border-bottom:1px solid var(--line); margin-bottom:1.1rem; }
+.land-line{ display:flex; flex-wrap:wrap; gap:.32rem .75rem; justify-content:center; font-size:1.02rem; color:var(--ink-faint); margin-bottom:1.2rem; align-items:baseline; }
+.land-line .k{ font-family:'Inter',sans-serif; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; opacity:.7; width:100%; text-align:center; margin-bottom:.18rem; }
+.land-line b{ color:var(--vellum-sh); font-weight:500; }
+.read p{ font-size:clamp(1.14rem,4.3vw,1.32rem); line-height:1.82; color:#d3c6a6; margin-bottom:1.05rem; }
+.read p strong{ color:var(--vellum); font-weight:600; }
+
+.gl{ color:var(--gilt-lt); border-bottom:1px dashed rgba(219,169,59,.6); cursor:pointer; text-decoration:none; white-space:nowrap; }
+.gl:hover{ color:#f0cb6a; border-bottom-style:solid; }
+
+.gap{ background:rgba(179,134,44,.08); border-left:2px solid var(--gilt); border-radius:0 6px 6px 0; padding:.9rem 1.05rem; margin:.4rem 0 1.1rem; }
+.gap .gk{ font-family:'Inter',sans-serif; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gilt); display:block; margin-bottom:.4rem; }
+.gap p{ font-style:italic; font-size:1.06rem; line-height:1.66; color:#cdbf9b; margin:0; }
+.bible{ font-size:1.02rem; line-height:1.64; color:var(--ink-faint); font-style:italic; padding-left:1.6rem; position:relative; margin-bottom:1.1rem; }
+.bible::before{ content:'✦'; position:absolute; left:0; top:.1rem; color:var(--gilt); font-style:normal; font-size:.85rem; opacity:.7; }
+
+.sh{ font-family:'Inter',sans-serif; font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gilt); margin:1.4rem 0 .7rem; padding-bottom:.3rem; border-bottom:1px solid var(--line); }
+.stories{ display:flex; flex-direction:column; gap:.95rem; }
+.story{ display:flex; gap:.8rem; align-items:flex-start; }
+.av{ flex:0 0 auto; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); margin-top:.1rem; }
+.stxt{ font-size:1.06rem; line-height:1.6; color:#cdbf9d; }
+.stxt .prop{ font-size:1.05rem; margin-right:.25rem; }
+.stxt b{ color:var(--vellum); font-weight:600; font-style:italic; }
+
+/* SHEETS */
+.ov{ display:none; position:fixed; inset:0; z-index:80; background:rgba(8,5,2,.55); backdrop-filter:blur(2px); }
+.ov.on{ display:block; }
+.sheet,.gsheet{ position:fixed; left:0; right:0; bottom:0; z-index:90;
+  background: radial-gradient(ellipse 120% 80% at 50% 0%, #f2e8d0, transparent 60%), var(--vellum); color:var(--ink);
+  border-radius:1rem 1rem 0 0; box-shadow:0 -10px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(120,90,50,.3);
+  transform:translateY(102%); transition:transform .42s cubic-bezier(.3,1.3,.5,1); max-height:80svh; overflow-y:auto; padding:1.2rem 1.45rem 2.6rem; }
+.sheet.on,.gsheet.on{ transform:translateY(0); }
+.grip{ width:40px; height:4px; background:rgba(80,60,30,.28); border-radius:2px; margin:0 auto 1rem; }
+.cx{ position:absolute; top:1rem; right:1.15rem; background:none; border:none; color:var(--ink-soft); font-size:1.2rem; cursor:pointer; }
+.cart-k{ font-family:'Inter',sans-serif; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:#9a7a3a; }
+.cart-en{ font-weight:600; font-size:2rem; line-height:1; margin:.12rem 0 .75rem; color:var(--ink); }
+.names{ display:flex; flex-direction:column; gap:.55rem; padding:.75rem 0 .95rem; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.nm{ display:flex; align-items:baseline; gap:.7rem; }
+.nm .tag{ font-family:'Inter',sans-serif; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:#9a7a3a; flex:0 0 4.6rem; padding-top:.3rem; }
+.nm .val{ font-size:1.5rem; line-height:1.2; color:#2c2014; }
+.nm .val.he{ font-family:'Frank Ruhl Libre',serif; direction:rtl; }
+.nm .val.ar{ font-family:'Amiri',serif; direction:rtl; }
+.nm .val .tr{ font-family:'EB Garamond',serif; font-style:italic; font-size:1rem; color:#6d5a3c; direction:ltr; display:inline-block; margin-left:.25rem; }
+.cart-also{ font-size:1rem; color:#6d5a3c; font-style:italic; margin:.75rem 0 .85rem; line-height:1.5; }
+.cart-also b{ font-style:normal; color:#3a2c1a; font-weight:600; }
+.cart-blurb{ font-size:1.1rem; line-height:1.62; color:#3f3120; }
+.name-stack{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:.75rem 0 .95rem; padding:.6rem 0; display:flex; flex-direction:column; gap:.28rem; }
+.stack-row{ display:grid; grid-template-columns:4.7rem 1fr; gap:.65rem; align-items:baseline; position:relative; }
+.stack-row:not(:last-child)::after{ content:'↓'; position:absolute; left:2.08rem; bottom:-.46rem; color:#aa8134; font-size:.72rem; }
+.stack-era{ font-family:'Inter',sans-serif; font-size:.54rem; letter-spacing:.11em; text-transform:uppercase; color:#9a7a3a; }
+.stack-name{ font-size:1.13rem; line-height:1.16; color:#2c2014; font-weight:600; }
+.gsheet .gterm{ font-weight:600; font-size:1.7rem; color:var(--ink); margin:.1rem 0 .2rem; }
+.gsheet .gtype{ font-family:'Inter',sans-serif; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:#9a7a3a; }
+.gsheet .gdef{ font-size:1.14rem; line-height:1.66; color:#3f3120; margin-top:.7rem; }
+
+.about{ display:none; position:fixed; inset:0; z-index:100; background:rgba(10,7,3,.78); padding:1.2rem; overflow-y:auto; }
+.about.on{ display:flex; align-items:flex-start; justify-content:center; }
+.about-card{ max-width:33rem; margin:auto; background:var(--vellum); color:var(--ink); border-radius:.9rem; padding:1.5rem 1.5rem 1.8rem; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+.about-card h3{ font-size:1.5rem; font-weight:600; margin-bottom:.7rem; color:var(--ink); }
+.about-card p{ font-size:1.02rem; line-height:1.64; color:#473826; margin-bottom:.85rem; }
+.about-card p strong{ color:#2a1f12; }
+.about-card .cls{ margin-top:.3rem; background:#2a1f12; color:var(--vellum); border:none; padding:.65rem 1.3rem; border-radius:.5rem; font-family:'Inter',sans-serif; font-size:.74rem; letter-spacing:.1em; cursor:pointer; }
+.about-sources{ margin-top:1rem; padding-top:.9rem; border-top:1px solid rgba(120,90,50,.3); }
+.about-sources h4{ font-family:'Inter',sans-serif; font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:#9a7a3a; margin-bottom:.6rem; }
+.about-sources p{ font-size:.94rem; line-height:1.6; color:#52412c; margin-bottom:.7rem; }
+.firsthint{ position:relative; max-width:30rem; margin:.2rem auto .2rem; padding:.85rem 1rem .9rem 1.1rem;
+  background:linear-gradient(180deg,#241a0f,#1b130b); border:1px solid var(--gilt); border-radius:.7rem;
+  box-shadow:0 10px 30px rgba(0,0,0,.4); animation:hintIn .5s ease; }
+.firsthint.gone{ display:none; }
+@keyframes hintIn{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:translateY(0); } }
+.firsthint .fh-body{ font-size:.92rem; line-height:1.55; color:#e6dcc4; padding-right:1rem; }
+.firsthint .fh-body strong{ color:var(--gilt-lt); }
+.firsthint .fh-em{ color:#f1e7cf; font-style:italic; }
+.firsthint .fh-gold{ color:var(--gilt-lt); border-bottom:1px dashed rgba(219,169,59,.6); }
+.firsthint .fh-go{ margin-top:.7rem; background:var(--gilt); color:#1a1208; border:none; padding:.45rem 1.1rem; border-radius:.45rem; font-family:'Inter',sans-serif; font-size:.7rem; font-weight:500; letter-spacing:.08em; cursor:pointer; }
+.firsthint .fh-x{ position:absolute; top:.4rem; right:.5rem; background:none; border:none; color:var(--ink-faint); font-size:1.1rem; cursor:pointer; line-height:1; }
+
+.foot{ text-align:center; padding:0 1.3rem 2.5rem; }
+.foot p{ font-style:italic; color:var(--ink-faint); font-size:1.02rem; line-height:1.62; max-width:36rem; margin:0 auto; }
+
+@keyframes holyGlow{ 0%,100%{ r:17; opacity:.62; } 50%{ r:24; opacity:.96; } }
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="kk">A land rewritten · c. 3000 BCE — 2026</div>
+  <div class="ttl">Palimpsest<em>.</em></div>
+  <div class="scripts"><span>Canaan</span><span>Israel</span><span class="he">אֶרֶץ יִשְׂרָאֵל</span><span class="ar">فِلَسْطِين</span><span>Palaestina</span></div>
+  <div class="sub">One narrow strip of land, written over again and again. Move through time gently: tap cities, figures, and map markers to let the geography tell the story first.</div>
+  <div class="top-actions">
+    <button class="about-btn" id="aboutBtn">Map key</button>
+  </div>
+</div>
+
+<div class="firsthint" id="firstHint">
+  <button class="fh-x" id="fhClose" aria-label="Dismiss">×</button>
+  <div class="fh-body">
+    <strong>How to explore</strong> — slide the timeline to move through ~5,000 years.
+    On the map, tap the <span class="fh-em">figures</span> to hear a voice, the <span class="fh-em">moving goods</span> for trade routes, and any <span class="fh-gold">gold word</span> for its meaning.
+    Tap <em>Map key</em> anytime.
+  </div>
+  <button class="fh-go" id="fhGo">Got it</button>
+</div>
+
+<div class="rail" id="rail"></div>
+<div class="voice-ribbon" id="voiceRibbon" aria-label="Voices along the timeline"></div>
+
+<div class="stage">
+  <div class="era-head"><div class="era-range" id="eraRange"></div><div class="era-name" id="eraName"></div></div>
+  <div class="map-panel">
+    <svg id="map" viewBox="0 -58 480 986" role="img" aria-label="Schematic map of the Holy Land"></svg>
+    <div class="map-tools"><button class="map-tool" id="holyBtn">Sacred Sites</button></div>
+    <div class="pop-card" id="popCard"></div>
+    <div class="pal-note" id="palNote"></div>
+    <div class="power-card" id="powerCard"></div>
+    <div class="npc-bubble" id="npcBubble"></div>
+  </div>
+  <div class="leg" id="leg"></div>
+  <div class="flowleg" id="flowleg"></div>
+  <div class="maptip">tap cities, figures, story markers, sacred places, or the home card</div>
+  <div class="nav"><button class="arrow" id="prev">‹ earlier</button><span class="counter" id="counter"></span><button class="arrow" id="next">later ›</button></div>
+</div>
+
+<div class="read">
+  <div class="essence" id="essence"></div>
+  <div class="land-line" id="landLine"></div>
+  <div id="body"></div>
+</div>
+
+
+<div class="foot"><p id="footLine"></p></div>
+
+<div class="ov" id="ov"></div>
+<div class="sheet" id="sheet"><div class="grip"></div><button class="cx" data-close>✕</button><div id="cart"></div></div>
+<div class="gsheet" id="gsheet"><div class="grip"></div><button class="cx" data-close>✕</button><div id="gloss"></div></div>
+
+<div class="about" id="about">
+  <div class="about-card">
+    <h3>Map key</h3>
+    <p><strong>Gold thread:</strong> where power sits, and how far decisions travel.</p>
+    <p><strong>Moving dots:</strong> people on the move. Colors distinguish displacement/refugees, Jewish immigration, return from exile, settlement growth, and pilgrimage.</p>
+    <p><strong>Map story markers:</strong> little dark chips move important essay ideas onto the places they happened.</p>
+    <p><strong>Sacred places:</strong> glowing nodes show which holy sites matter most in each era.</p>
+    <p><strong>Map notes:</strong> the small note on each map gives the big idea for that slide.</p>
+    <p><strong>Names:</strong> labels are used where they clarify the period; modern identities are not pasted backward onto ancient people.</p>
+    <div class="about-sources">
+      <h4>About this map &amp; sources</h4>
+      <p>This is a <strong>schematic</strong> guide, not a survey atlas: borders are washes of colour, the coastline is stylised, and population flows show direction and rough scale, not exact figures. It is built to be <strong>fair to a contested history</strong>, not to settle it — where one event carries two names (1948 above all), both are given.</p>
+      <p>Colours are pigments, not flags. Where scripture and archaeology diverge, the text says so. The present-day slide reflects events <strong>as of early 2026</strong> (the October 2025 Gaza ceasefire, the “Yellow Line”, and UN Resolution 2803) and will need updating over time.</p>
+      <p>It draws on standard reference history rather than any single partisan source — works such as the <em>Cambridge</em> and <em>Oxford</em> histories of the region, and the framing of nature's legal personhood and contested naming used by historians and geographers of the Levant. Corrections are welcome.</p>
+    </div>
+    <button class="cls" id="aboutClose">Close</button>
+  </div>
+</div>
+
+<script>
+// ═══════ GLOSSARY ═══════
+const GLOSSARY={
+ amarna:["Amarna letters","Diplomatic letters (14th c. BCE) found in Egypt, written by Canaanite city-kings to Pharaoh — our earliest written glimpse of places like Jerusalem (as “Urusalim”) and Shechem."],
+ losttribes:["The lost tribes","The ten northern Israelite tribes deported by Assyria after 722 BCE, who never returned as distinct groups — origin of the legend of the “ten lost tribes”."],
+ firsttemple:["First Temple","The Temple built by Solomon in Jerusalem, centre of ancient Israelite worship, destroyed by Babylon in 586 BCE."],
+ diaspora:["Diaspora","A people scattered outside its homeland. The Jewish diaspora began with the Babylonian exile and grew vast after Rome's destruction of Jerusalem; today most Jews live outside Israel. “Palestinian diaspora” describes those displaced since 1948."],
+ maccabees:["The Maccabees","A Jewish family who led a successful revolt (167–160 BCE) against the Seleucid Greek ban on Jewish practice. Their rededication of the Temple is celebrated as Hanukkah."],
+ hasmonean:["Hasmonean","The dynasty descended from the Maccabees that ruled an independent Jewish kingdom (140–63 BCE) — the last sustained Jewish sovereignty until 1948."],
+ seleucid:["Seleucids","One of the Greek kingdoms that succeeded Alexander the Great, based in Syria. Its attempt to suppress Judaism triggered the Maccabean revolt."],
+ secondtemple:["Second Temple","The Temple rebuilt after the Babylonian exile (c. 516 BCE) and grandly expanded by Herod. Rome destroyed it in 70 CE; only its western retaining wall survives."],
+ barkokhba:["Bar Kokhba revolt","The last great Jewish revolt against Rome (132–135 CE). Its defeat led Hadrian to rename the province Syria Palaestina, bar Jews from Jerusalem, and scatter much of the population."],
+ westernwall:["Western Wall","The surviving western retaining wall of the Temple Mount platform — Judaism's most sacred accessible prayer site, historically called the “Wailing Wall”."],
+ holysepulchre:["Church of the Holy Sepulchre","The church in Jerusalem built over the traditional sites of Jesus' crucifixion and tomb — among the holiest places in Christianity."],
+ haram:["Al-Aqsa Mosque / Haram al-Sharif / Temple Mount","The raised sacred platform in Jerusalem: Muslims know it as Haram al-Sharif, home to Al-Aqsa Mosque (al-Masjid al-Aqsa) and the Dome of the Rock; Jews know it as the Temple Mount."],
+ domeofrock:["Dome of the Rock","The gold-capped Islamic shrine built in 691 CE on the Haram al-Sharif / Temple Mount, over a rock linked in Muslim tradition to Muhammad's night journey and in Jewish tradition to Abraham and the Temple."],
+ caliphate:["Caliphate","An Islamic state led by a “caliph”, a successor to Muhammad. The early caliphates (Umayyad, Abbasid, Fatimid) ruled this land from far-off capitals — Damascus, Baghdad, Cairo."],
+ saladin:["Saladin","Salah ad-Din (1137–1193), a Kurdish Muslim sultan who united Egypt and Syria and retook Jerusalem from the Crusaders in 1187 — remembered for doing so with relative mercy."],
+ crusade:["Crusades","Medieval Christian holy wars (from 1095) to seize the Holy Land. The First Crusade captured Jerusalem in 1099; Crusader states survived on the coast until 1291."],
+ mamluks:["Mamluks","A dynasty of freed slave-soldiers who ruled Egypt and the Levant from Cairo (1250–1517), repelling both Crusaders and Mongols."],
+ yishuv:["Old Yishuv","The long-established Jewish community living in the Land of Israel before Zionism — concentrated in Jerusalem, Safed, Hebron, and Tiberias."],
+ zionism:["Zionism","The modern movement, founded politically by Theodor Herzl in the 1890s, for Jewish national self-determination in the ancestral land of Israel — arising largely in response to European antisemitism."],
+ aliyah:["Aliyah","Hebrew for “ascent”: the immigration of Jews to the Land of Israel. The waves are numbered — the First Aliyah began in 1882."],
+ pogrom:["Pogroms","Organised, often officially tolerated violent attacks on Jewish communities, especially in the Russian Empire. They drove much early Zionist immigration."],
+ balfour:["Balfour Declaration","A 1917 letter from Britain's foreign secretary backing “a national home for the Jewish people” in Palestine while pledging not to harm existing non-Jewish communities — a promise to two peoples that proved impossible to keep."],
+ mandate:["The Mandate","After WWI the League of Nations assigned former Ottoman territories to Britain and France to administer toward eventual self-rule. Britain held the Mandate for Palestine, 1920–1948."],
+ holocaust:["Holocaust","The Nazi genocide of six million European Jews (1941–45). Its horror transformed the urgency of, and support for, a Jewish state."],
+ res181:["Resolution 181","UN General Assembly vote of Nov 1947 to partition Mandatory Palestine into a Jewish and an Arab state with Jerusalem internationalised. Accepted by Jewish leaders, rejected by Arab leaders."],
+ nakba:["al-Nakba","Arabic for “the Catastrophe”: the Palestinian term for 1948, when around 700,000 Palestinians were expelled or fled during the war around Israel's founding, and were barred from returning."],
+ greenline:["Green Line","The 1949 armistice line between Israel and its neighbours, drawn in green on the map. It is still the baseline for most two-state proposals."],
+ settlements:["Settlements","Jewish communities built in the territories Israel captured in 1967 (mainly the West Bank, and Gaza until 2005). Most of the world considers them illegal under international law; Israel disputes this."],
+ occupation:["Occupation","The military control Israel has exercised over the West Bank and Gaza since capturing them in 1967. Gaza's status is debated after Israel's 2005 pullout; the West Bank remains under occupation."],
+ intifada:["Intifada","Arabic for “shaking off”: a Palestinian uprising against occupation. The First (1987–93) was mostly protests, strikes, and stone-throwing; the Second (2000–05) included armed attacks, suicide bombings, Israeli military operations, curfews, and heavy civilian fear and loss."],
+ oslo:["Oslo Accords","Agreements of 1993–95 in which Israel and the PLO recognised each other and set up Palestinian self-government — meant to lead to a final peace that was never reached."],
+ plo:["PLO","The Palestine Liberation Organization (founded 1964), long the main body representing Palestinian nationalism; its dominant faction is Fatah."],
+ pa:["Palestinian Authority","Created by the Oslo Accords in 1994 to govern Palestinian areas. It runs the West Bank today; it lost Gaza to Hamas in 2007."],
+ areas:["Areas A / B / C","Oslo split the West Bank into Area A (full Palestinian control), B (Palestinian civil, Israeli security), and C (full Israeli control — about 60%, including the settlements)."],
+ secondintifada:["Second Intifada","The Palestinian uprising of 2000–2005. Unlike the first, it included suicide bombings, shootings, Israeli military incursions, curfews, and many civilian deaths on both sides."],
+ hamas:["Hamas","An Islamist Palestinian movement founded in 1987 — both a party and an armed group. It won elections in 2006, seized Gaza in 2007, and led the 7 October 2023 attack."],
+ yellowline:["Yellow Line","The line behind which Israeli forces withdrew under the October 2025 Gaza ceasefire — leaving Israel controlling roughly half the territory while terms are negotiated."],
+ res2803:["Resolution 2803","A 2025 UN Security Council resolution endorsing a framework to pause the Gaza war and set up a transitional, technocratic administration for the territory."],
+ ceasefire2025:["the 2025 ceasefire","The Gaza ceasefire announced 10 October 2025, pausing two years of war, exchanging hostages and prisoners, and surging aid — fragile and frequently strained into 2026."]
+};
+function g(k,txt){ return `<a class="gl" data-g="${k}">${txt||GLOSSARY[k][0]}</a>`; }
+
+// ═══════ MAP GEOMETRY ═══════
+const PATHS={
+ land:"M184,62 L262,58 L332,70 L324,132 L314,208 L304,296 L302,372 L292,456 L264,538 L226,628 L192,715 L170,792 L128,704 L94,610 L72,544 L92,500 L112,444 L130,362 L142,282 L154,198 L162,118 Z",
+ galilee:"M184,62 L262,58 L332,70 L314,208 L254,205 L205,180 L154,198 L162,118 Z",
+ coast:"M154,198 L205,212 L188,352 L166,462 L112,444 L130,362 L142,282 Z",
+ westbank:"M242,232 C270,246 303,300 302,350 C302,405 286,436 260,444 C234,452 222,420 222,386 C220,346 212,300 222,266 C228,244 234,232 242,232 Z",
+ gaza:"M98,478 L118,474 L90,552 L72,544 Z",
+ negev:"M112,444 L302,448 L264,538 L226,628 L192,715 L170,792 L128,704 L94,610 L72,544 L92,500 Z"
+};
+const CITIES={
+ jerusalem:{x:243,y:358,en:"Jerusalem",he:"יְרוּשָׁלַיִם",he_tr:"Yerushalayim",ar:"القُدْس",ar_tr:"al-Quds",also:"Urusalim (Bronze Age) · Aelia Capitolina (Roman) · Bayt al-Maqdis",blurb:"Holy to Jews (the Temple Mount and Western Wall), Christians (Calvary and the Church of the Holy Sepulchre), and Muslims (Al-Aqsa Mosque / al-Masjid al-Aqsa, the Dome of the Rock, and Haram al-Sharif). The single most contested square mile on earth."},
+ jaffa:{x:138,y:355,en:"Tel Aviv–Jaffa",he:"תֵּל־אָבִיב–יָפוֹ",he_tr:"Tel Aviv–Yafo",ar:"يَافَا",ar_tr:"Yafa",also:"Ancient port of Jaffa (Yafo); Tel Aviv founded beside it in 1909",blurb:"Jaffa is one of the oldest harbours in the world; the modern Hebrew city of Tel Aviv grew from its dunes in the 20th century, and the two are now one municipality."},
+ haifa:{x:162,y:168,en:"Haifa",he:"חֵיפָה",he_tr:"Ḥeifa",ar:"حَيْفَا",ar_tr:"Ḥayfa",also:"Beneath Mount Carmel; site of the Bahá’í Gardens",blurb:"A mixed port city on the bay, long held up as a place of Jewish–Arab coexistence, and the world centre of the Bahá’í faith."},
+ acre:{x:167,y:138,en:"Acre",he:"עַכּוֹ",he_tr:"Akko",ar:"عَكَّا",ar_tr:"ʿAkka",also:"Crusader “Saint-Jean-d'Acre”; Ottoman fortress city",blurb:"The last Crusader stronghold to fall (1291) and later the fortress that turned back Napoleon. Its Ottoman old city is a UNESCO site."},
+ gaza:{x:98,y:488,en:"Gaza",he:"עַזָּה",he_tr:"Azza",ar:"غَزَّة",ar_tr:"Ghazza",also:"One of the Philistine Pentapolis cities; among the oldest in the world",blurb:"Inhabited for over 4,000 years and named in Egyptian, Philistine, and Arabic records alike. Since 2007 governed by Hamas; the centre of the 2023–25 war."},
+ nablus:{x:250,y:272,en:"Nablus",he:"שְׁכֶם",he_tr:"Shechem",ar:"نَابُلُس",ar_tr:"Nablus",also:"Biblical Shechem · Roman Neapolis (from which “Nablus”)",blurb:"A West Bank city layered three names deep: patriarchal Shechem, Roman Neapolis, Arabic Nablus. Beside it rises Mount Gerizim, holy to the Samaritans."},
+ hebron:{x:250,y:425,en:"Hebron",he:"חֶבְרוֹן",he_tr:"Ḥevron",ar:"الخَلِيل",ar_tr:"al-Khalil",also:"“al-Khalil” = “the friend” (of God), i.e. Abraham",blurb:"Burial place of Abraham in both traditions — the Tomb of the Patriarchs / Ibrahimi Mosque, sacred and bitterly contested, shared under uneasy partition."},
+ bethlehem:{x:246,y:378,en:"Bethlehem",he:"בֵּית לֶחֶם",he_tr:"Beit Leḥem",ar:"بَيْت لَحْم",ar_tr:"Bayt Laḥm",also:"“House of bread” in Hebrew; “house of meat” in Arabic",blurb:"Birthplace of David and, in Christian tradition, of Jesus. The Church of the Nativity is among the oldest churches in continuous use. Today a Palestinian city."},
+ nazareth:{x:228,y:178,en:"Nazareth",he:"נָצְרַת",he_tr:"Natzrat",ar:"النَّاصِرَة",ar_tr:"an-Nāṣira",also:"The largest Arab city inside Israel proper",blurb:"Where the Gospels place Jesus' childhood. Today the largest Arab-majority city within Israel's pre-1967 lines, both Christian and Muslim."},
+ jericho:{x:288,y:352,en:"Jericho",he:"יְרִיחוֹ",he_tr:"Yeriḥo",ar:"أَرِيحَا",ar_tr:"Arīḥā",also:"Among the oldest continuously inhabited towns on earth (~9000 BCE)",blurb:"Walls older than the pyramids. Famous in scripture for Joshua; in fact one of humanity's first towns. A West Bank oasis below sea level."},
+ tiberias:{x:300,y:192,en:"Tiberias",he:"טְבֶרְיָה",he_tr:"Tverya",ar:"طَبَرِيَّا",ar_tr:"Ṭabariyya",also:"On the Sea of Galilee; a centre of rabbinic learning",blurb:"Built by Herod's son and named for a Roman emperor; later a great seat of Jewish scholarship where the Hebrew Bible's vowel-pointing was fixed."},
+ ramla:{x:160,y:362,en:"Ramla",he:"רַמְלָה",he_tr:"Ramla",ar:"الرَّمْلَة",ar_tr:"ar-Ramla",also:"Capital of Jund Filastin; the one town the early Arab rulers founded",blurb:"Founded around 705 CE as the Muslim administrative capital of the district of Palestine — the rare city here that was an Arab foundation, not an inherited one."},
+ ramallah:{x:252,y:316,en:"Ramallah",he:"רמאללה",he_tr:"Ramallah",ar:"رَام ٱللّٰه",ar_tr:"Ram Allah",also:"Modern administrative centre of the Palestinian Authority",blurb:"A central West Bank city just north of Jerusalem. Since the Oslo era it has been the administrative centre of the Palestinian Authority."},
+ eilat:{x:170,y:775,en:"Eilat / Aqaba",he:"אֵילַת",he_tr:"Eilat",ar:"العَقَبَة",ar_tr:"al-ʿAqaba",also:"Twin towns on the Red Sea: Eilat (Israel) and Aqaba (Jordan)",blurb:"The land's southern tip, opening to the Red Sea. Israel's Eilat and Jordan's Aqaba sit a few kilometres apart on the same small gulf."}
+};
+
+const FLOWCOL={ disp:['#bf4a2e','Displacement / refugees'], jew:['#6f5fa6','Jewish immigration'], ret:['#5f8a45','Return from exile'], set:['#d68a26','Settlement growth'], pil:['#b3862c','Arrivals from abroad'] };
+
+// anchors
+const A={JERU:[243,358],COAST:[150,330],HAIFA:[162,168],JAFFA:[138,355],GAZA:[98,488],WB:[255,330],SAM:[250,260],
+ BAB:[470,250],ASSY:[470,110],EUR:[28,28],EUR2:[20,70],LEB:[208,4],JOR:[458,360],SE:[455,470],SINAI:[20,610]};
+const POWERPOS={thebes:[42,680],jerusalem:[243,358],babylon:[470,250],persepolis:[466,414],rome:[22,130],constantinople:[405,78],damascus:[402,74],cairo:[52,585],istanbul:[405,78],london:[86,116],telaviv:[138,355],ramallah:[255,330],gaza:[98,488]};
+const LABEL_OFFSETS={
+ jerusalem:{dx:-2,dy:-14,anchor:'start'},
+ jericho:{dx:18,dy:13,anchor:'start'},
+ bethlehem:{dx:12,dy:13,anchor:'start'},
+ hebron:{dx:10,dy:14,anchor:'start'},
+ ramallah:{dx:10,dy:-9,anchor:'start'},
+ nablus:{dx:6,dy:-8,anchor:'start'},
+ haifa:{dx:8,dy:-8,anchor:'start'},
+ jaffa:{dx:8,dy:10,anchor:'start'},
+ gaza:{dx:8,dy:12,anchor:'start'}
+};
+
+const POWER_EMOJI={thebes:'𓂀',jerusalem:'🏛️',babylon:'🧱',persepolis:'🦁',rome:'🏛️',constantinople:'⛪',damascus:'🌿',cairo:'🕌',istanbul:'🧿',london:'👑',telaviv:'📻',ramallah:'📋',gaza:'📱'};
+const POPULATION={
+ canaan:{who:'Canaanite towns',detail:'Local kings, farmers, and traders in walled city-states, with Egyptian influence reaching in from afar.'},
+ israel:{who:'Israelites & Judeans',detail:'Israelite and Judean highlanders in two kingdoms; Philistines along the coast; imperial deportees as the empires arrive.'},
+ persia:{who:'Judeans & diaspora',detail:'Returnees rebuilding Jerusalem alongside people who never left; much of the exile remains in Babylonia.'},
+ hasmon:{who:'Judean Jewish kingdom',detail:'A newly independent Jewish state under Hasmonean rule, with Greek-speaking towns and Samaritan communities continuing alongside.'},
+ rome:{who:'Mixed Roman province',detail:'Jews, Samaritans, Greeks, and pagans under Roman rule; early Christians emerging in Galilee and Judaea.'},
+ byz:{who:'Christian majority',detail:'Greek-speaking Christians dominating public life, with Jewish and Samaritan communities continuing outside Jerusalem.'},
+ islam:{who:'Gradually Arabic-speaking',detail:'Muslim majority growing over centuries; large Christian, Jewish, and Samaritan communities remaining across the towns and villages.'},
+ crusader:{who:'Local peoples, Latin rulers',detail:'Arabic-speaking Muslim and Eastern Christian populations living around and under Latin Crusader lords along the coast.'},
+ mamluk:{who:'Arabic Muslim majority',detail:'Arabic-speaking Muslim towns and villages; Mamluk military rulers from Cairo; Christian and Jewish pilgrims and communities.'},
+ ottoman:{who:'Mostly Palestinian Arabs',detail:'Arabic-speaking Muslim and Christian villages and old Jewish communities under Ottoman rule — with Zionist immigration arriving late in the period.'},
+ mandate:{who:'Arab majority, Jewish minority',detail:'Palestinian Arab majority and a growing Jewish Yishuv under British administration, as immigration accelerates and tensions rise.'},
+ '48':{who:'Israelis & Palestinians',detail:'Israeli Jews in the new state; about 700,000 Palestinians displaced or fled; Arab communities remaining inside Israel; Palestinians under Jordanian and Egyptian rule.'},
+ '67':{who:'Under one military map',detail:'Israelis within the Green Line; Palestinians in the West Bank and Gaza under Israeli military occupation; settlements beginning to grow.'},
+ oslo:{who:'Divided authority',detail:'Israel governing much of the territory; a Palestinian Authority in parts of the West Bank and Gaza — until Hamas takes Gaza in 2007.'},
+ now:{who:'Two societies',detail:'Israeli and Palestinian societies living amid war, ceasefire, occupation, displacement, hostages, and grief.'}
+};
+const SLIDE_NOTES={
+ orientation:'Let’s start with geography: sea, hills, river valley, and desert make this a narrow crossing place.',
+ canaan:'A local city-state world comes first. Later peoples inherit these roads, towns, and stories.',
+ israel:'Israel and Judah are real Iron Age kingdoms. They become part of Jewish memory, scripture, and later identity.',
+ persia:'Return matters, but so does building communities across the wider world: Jewish life now grows both in the land and in the diaspora.',
+ hasmon:'This is a rare period of Judean Jewish self-rule, remembered later as proof that sovereignty here once existed.',
+ rome:'Rome destroys the Temple and renames the province. Both the loss and the name keep echoing later.',
+ byz:'Christian pilgrimage makes Bethlehem, Nazareth, and Jerusalem into a sacred map for millions.',
+ islam:'Arabic and Islamic names join the older layers. Al-Aqsa, the Dome of the Rock, and al-Quds reshape sacred geography.',
+ crusader:'Latin Christian rule is brief, dramatic, and coastal. Local Muslim, Jewish, and Eastern Christian lives continue around it.',
+ mamluk:'Cairo rules from afar, while local Arabic-speaking towns, villages, pilgrims, and shrines keep daily life moving.',
+ ottoman:'For centuries this is mostly provincial life: villages, taxes, shrines, ports, and old communities under Istanbul.',
+ mandate:'British rule turns two growing national movements into a single urgent political problem.',
+ '48':'The red movement dots here are Palestinian displacement and refugees during the Nakba; purple dots show Jewish immigration.',
+ '67':'After 1967, Israel controls the West Bank and Gaza. Palestinians live under military rule while settlements grow.',
+ oslo:'Oslo creates Palestinian self-rule in pieces, but the hardest questions stay open.',
+ now:'The present is still shaped by borders, safety, hostages, refugees, Jerusalem, and the unresolved question of sovereignty.'
+};
+const SACRED_SITES={
+ temple:{x:250,y:350,icon:'🕌',name:'Al-Aqsa / Haram / Temple Mount',text:'The same raised platform is known to Muslims as Haram al-Sharif, home to Al-Aqsa Mosque (al-Masjid al-Aqsa) and the Dome of the Rock, and to Jews as the Temple Mount.'},
+ sepulchre:{x:228,y:364,icon:'⛪',name:'Church of the Holy Sepulchre',text:'Christian tradition locates Jesus crucified and buried here; pilgrimage remakes the city around it.'},
+ bethlehem:{x:246,y:378,icon:'✴️',name:'Church of the Nativity',text:'Built over the traditional birthplace of Jesus in Bethlehem, a Palestinian city whose holy geography is still lived.'},
+ hebron:{x:250,y:425,icon:'🕯️',name:'Ibrahimi Mosque / Tomb of the Patriarchs',text:'This shared Abrahamic shrine in Hebron makes memory physically shared and politically tense.'},
+ nazareth:{x:228,y:178,icon:'🌿',name:'Nazareth',text:'The Gospel home of Jesus; today an Arab city inside Israel with Muslim and Christian communities.'},
+ tiberias:{x:300,y:192,icon:'📖',name:'Tiberias',text:'A Galilee centre of rabbinic learning after Jerusalem is restricted; smaller than the old Temple world, but not erased.'},
+ safed:{x:276,y:125,icon:'✨',name:'Safed',text:'One of the later four Jewish holy cities, especially associated with mysticism and Ottoman-era Jewish life.'}
+};
+const ERA_SACRED={
+ orientation:['temple','bethlehem','hebron','nazareth'],
+ canaan:[],
+ israel:['temple','hebron'],
+ persia:['temple'],
+ hasmon:['temple','hebron'],
+ rome:['temple','bethlehem','nazareth','tiberias'],
+ byz:['sepulchre','bethlehem','nazareth','tiberias'],
+ islam:['temple','sepulchre','bethlehem','hebron'],
+ crusader:['sepulchre','bethlehem','hebron','temple'],
+ mamluk:['temple','hebron','sepulchre'],
+ ottoman:['temple','sepulchre','hebron','safed','tiberias'],
+ mandate:['temple','sepulchre','hebron','bethlehem','safed'],
+ '48':['temple','sepulchre','hebron'],
+ '67':['temple','sepulchre','hebron','bethlehem'],
+ oslo:['temple','sepulchre','hebron','bethlehem'],
+ now:['temple','sepulchre','hebron','bethlehem']
+};
+const NAME_STACKS={
+ jerusalem:[['Bronze Age','Urusalim'],['Hebrew/Jewish','Yerushalayim'],['Roman','Aelia Capitolina'],['Latin/English','Jerusalem'],['Arabic/Islamic','al-Quds']],
+ jaffa:[['Ancient','Joppa / Yafo'],['Arabic','Yafa'],['Zionist modern','Tel Aviv beside Jaffa'],['Today','Tel Aviv-Yafo']],
+ nablus:[['Biblical','Shechem'],['Roman','Neapolis'],['Arabic','Nablus']],
+ gaza:[['Ancient Egyptian','Ghazzat / Gaza'],['Philistine','Gaza'],['Arabic','Ghazza']],
+ hebron:[['Hebrew','Hebron / Hevron'],['Arabic','al-Khalil'],['Sacred site','Ibrahimi Mosque / Tomb of the Patriarchs']],
+ bethlehem:[['Hebrew','Beit Lehem'],['Greek/Christian','Bethlehem'],['Arabic','Bayt Lahm']],
+ acre:[['Ancient','Akka'],['Crusader',"Saint-Jean-d'Acre"],['Arabic/Hebrew','Akka / Akko']]
+};
+const MAP_FACTS={
+ orientation:[{x:210,y:236,icon:'🛤️',title:'Land bridge',text:'Before names and borders, the land is a narrow bridge between Egypt, Syria, Mesopotamia, sea, and desert.'},{x:150,y:430,icon:'〰️',title:'Coast road',text:'The easiest north-south route runs along the coast, carrying armies, merchants, pilgrims, refugees, and news.'},{x:250,y:300,icon:'💧',title:'Jordan Valley',text:'The river valley drops below sea level and creates a second long corridor beside the hill country.'},{x:300,y:560,icon:'🏜️',title:'Desert edge',text:'The desert makes the habitable corridor narrow, which concentrates armies, pilgrims, traders, and claims.'},{x:176,y:660,icon:'⛰️',title:'Southern gate',text:'The Negev and Red Sea approaches connect this small strip to Sinai, Arabia, and the wider trade routes.'}],
+ canaan:[{x:350,y:326,icon:'✉️',title:'Urusalim writes',text:'A Canaanite ruler of Jerusalem appears in diplomatic letters to Egypt.'},{x:92,y:448,icon:'🐚',title:'Gaza faces Egypt',text:'The coast is already a gateway between Egypt, Syria, and the sea.'}],
+ israel:[{x:350,y:284,icon:'🌾',title:'Highland kingdoms',text:'Israel and Judah form in the hills, while Philistine cities line the coast.'},{x:382,y:218,icon:'🥀',title:'Exile road',text:'Assyria and Babylon turn local defeat into displacement and diaspora.'}],
+ persia:[{x:350,y:360,icon:'🧱',title:'Return rebuilds',text:'Persia permits return and the Second Temple is rebuilt around 516 BCE.'},{x:410,y:252,icon:'🏠',title:'Diaspora remains',text:'Not everyone returns; Jewish life now has more than one center.'}],
+ hasmon:[{x:350,y:360,icon:'🕎',title:'Temple rededicated',text:'The Maccabee revolt creates the memory celebrated as Hanukkah.'},{x:88,y:430,icon:'🪙',title:'Greek coast',text:'Hellenistic language and trade remain part of the social world.'}],
+ rome:[{x:350,y:360,icon:'🔥',title:'Temple destroyed',text:'Rome destroys the Second Temple in 70 CE; the stones become a memory Jews will carry for centuries.'},{x:350,y:424,icon:'🏷️',title:'Palaestina named',text:'After Bar Kokhba, Rome renames the province Syria Palaestina; an imperial label outlives the empire.'}],
+ byz:[{x:350,y:360,icon:'⛪',title:'Pilgrim city',text:'Christian pilgrimage reorganizes Jerusalem around holy places.'},{x:360,y:188,icon:'📖',title:'Learning survives',text:'Jewish learning continues around Galilee and Tiberias despite imperial restrictions and a much smaller political position.'}],
+ islam:[{x:350,y:340,icon:'🕌',title:'Al-Aqsa rises',text:'Al-Aqsa Mosque and the Dome of the Rock make the old Temple platform central in Islamic sacred geography too.'},{x:82,y:362,icon:'🏙️',title:'Ramla founded',text:'Ramla becomes the new Arab administrative capital of Jund Filastin.'}],
+ crusader:[{x:92,y:172,icon:'⚔️',title:'Acre corridor',text:'Crusader power survives longest along fortified coastal cities.'},{x:350,y:360,icon:'🕊️',title:'Saladin returns',text:'In 1187 Saladin retakes Jerusalem with much less killing than the Crusader capture of 1099.'}],
+ mamluk:[{x:88,y:444,icon:'🐪',title:'Cairo road',text:'Gaza sits on the caravan road toward the Egyptian capital.'},{x:350,y:360,icon:'🪟',title:'Stonework remains',text:'Mamluk architecture still marks Jerusalem even when power sits elsewhere.'}],
+ ottoman:[{x:350,y:282,icon:'🫒',title:'Village life',text:'Most people live in Arabic-speaking towns and villages under Ottoman districts; the grand politics are distant, but the olive press is local.'},{x:82,y:356,icon:'🚢',title:'Aliyah begins',text:'From the 1880s, Zionist Jewish immigrants arrive through ports like Jaffa.'}],
+ mandate:[{x:96,y:168,icon:'🧳',title:'Refugees arrive',text:'European Jewish refugees reach Haifa and Jaffa as danger in Europe grows.'},{x:82,y:356,icon:'📰',title:'Partition argued',text:'Palestinian Arab leaders and families argue against British plans to divide the land.'}],
+ '48':[{x:78,y:390,icon:'🔑',title:'Nakba road',text:'Palestinian families flee or are expelled from towns and villages; many keep keys.'},{x:350,y:360,icon:'✂️',title:'Jerusalem split',text:'The 1949 lines divide Jerusalem between Israel and Jordan.'}],
+ '67':[{x:350,y:316,icon:'🪪',title:'Occupation',text:'West Bank and Gaza Palestinians now live under Israeli military control.'},{x:350,y:425,icon:'🏘️',title:'Settlements',text:'Jewish settlements begin growing in occupied territory after 1967.'}],
+ oslo:[{x:350,y:316,icon:'📋',title:'PA begins',text:'Oslo creates Palestinian self-government without resolving sovereignty.'},{x:82,y:448,icon:'🎣',title:'Gaza apart',text:'After 2007, Gaza and the West Bank are governed by rival Palestinian authorities.'}],
+ now:[{x:82,y:448,icon:'⛺',title:'Displacement',text:'The war forces families from homes into shelters and tents, again and again.'},{x:350,y:360,icon:'🧭',title:'Unresolved core',text:'Borders, Jerusalem, refugees, sovereignty, and security remain open questions.'}]
+};
+
+// ═══════ ERA DATA ═══════
+const ERAS=[
+{ id:'orientation',cyr:'before names',cnm:'The Corridor',swatch:'#7a8b78',range:'Orientation',name:'Between Sea and Desert',
+ land:[['Geography','Levantine corridor'],['Later names','Canaan · Israel · Palestine · the Holy Land']],
+ essence:'Before the argument over names, there is the shape of the place: coast, hills, river valley, desert, and roads.',
+ terr:[{zone:'land',fill:'#7a8b78',op:.34,label:'THE CORRIDOR',lx:206,ly:246},{zone:'coast',fill:'#7898a0',op:.34,label:'',lx:0,ly:0},{zone:'westbank',fill:'#8a7651',op:.26,label:'',lx:0,ly:0},{zone:'negev',fill:'#b89857',op:.24,label:'DESERT EDGE',lx:165,ly:610}],
+ places:[],
+ flows:[],
+ body:[`The land bridge between sea and desert shaped a narrow corridor that connected Egypt, Syria, Mesopotamia, and the wider world. Armies, pilgrims, merchants, refugees, imperial messengers, and harvests all moved through it, because the alternatives were open water, mountain, or dry country.`,
+ `That is why so much history clings to so small a place. The coast road links Egypt to Syria and Mesopotamia; the hill towns hold shrines and fortresses; the Jordan Valley drops below sea level; Gaza faces Egypt; Galilee faces the north. Later identities grow here, but none begin on an empty map.`,
+ `Both peoples who call this land home today — Palestinians and Israelis — hold deep, living attachments to it: long histories, sacred memories, languages, and modern experiences layered onto much older local worlds.`],
+ bible:null,
+ gap:`This is the first layer: a small corridor where roads, empires, sacred stories, languages, and losses kept attaching themselves to the same ground. The rest of the map asks how those attachments remain alive or become reactivated.`,
+ stories:[]},
+
+{ id:'canaan',cyr:'c.3000–1200 BCE',cnm:'Canaan',swatch:'#b98a3e',range:'Bronze Age',name:'Canaan',
+ land:[['Hebrew/older','Canaan · Kĕnaʿan'],['Egyptian','Retjenu']],
+ essence:'A bridge of city-states between Egypt and the empires of the north.',
+ powerCenter:{city:'Thebes',pos:'thebes',distanceMiles:450,travelTime:'3 weeks by caravan',kind:'Egyptian imperial overlordship'},
+ terr:[{zone:'land',fill:'#c79a4b',op:.5,label:'CANAAN',lx:215,ly:300}],
+ places:[['jericho','Jericho'],['nablus','Shechem'],['jerusalem','Urusalim'],['gaza','Gaza'],['acre','Akka']],
+ flows:[],
+ body:[`Long before any of the names later fought over, this was <strong>Canaan</strong> — a patchwork of walled city-states (Hazor, Megiddo, Shechem, Jericho, and a hill-town called Urusalim) straddling the only land bridge between Egypt and Mesopotamia.`,
+ `Jericho is among the oldest settled places on earth, its walls older than the pyramids. In the ${g('amarna','Amarna letters')}, local kings beg Pharaoh for troops — Egypt is the distant overlord. And it was the Canaanites who gave the world its <strong>alphabet</strong>, the script every later tongue here would borrow.`],
+ bible:`In the Hebrew Bible this is the land promised to Abraham. Archaeology cannot confirm the patriarchs or the Exodus in their biblical form; material evidence points to early Israelites emerging largely from within Canaanite society rather than arriving as a single outside wave.`,
+ gap:null,
+ stories:[{loc:'jericho',dx:36,dy:36,sk:'#c08552',hr:'#2a1a0e',prop:'🏺',role:'A Canaanite potter in Jericho',text:'shapes a storage jar from river clay, in a town already older than memory — the walls outside have stood for thousands of years.'},
+ {loc:'jerusalem',sk:'#a96b3d',hr:'#1a1410',prop:'✉️',role:'A Canaanite king of Urusalim',text:'dictates a worried letter to Pharaoh, begging for archers. Egypt\'s reply, if it ever came, is lost.'},
+ {loc:'acre',sk:'#d39e74',hr:'#3a2412',prop:'🐟',role:'A fisher near Akka',text:'mends nets at dawn and hears three languages in the harbour before the sun is high.'}]},
+
+{ id:'israel',cyr:'c.1200–586 BCE',cnm:'Israel & Judah',swatch:'#8d5a86',range:'Iron Age',name:'Israel & Judah',
+ land:[['North','Israel · Yisra’el'],['South','Judah · Yehudah'],['Coast','Philistia · Peleset']],
+ essence:'Two small highland kingdoms — and the coast where the word “Palestine” is born.',
+ powerCenter:{city:'Jerusalem / Samaria',pos:'jerusalem',distanceMiles:0,travelTime:'local royal courts',kind:'Israelite and Judean courts, early roots of Jewish identity'},
+ terr:[{zone:'galilee',fill:'#8d5a86',op:.45,label:'ISRAEL',lx:250,ly:120},{zone:'westbank',fill:'#6a4a86',op:.5,label:'JUDAH',lx:250,ly:400},{zone:'coast',fill:'#a9863e',op:.4,label:'PHILISTIA',lx:150,ly:430}],
+ places:[['nablus','Samaria'],['jerusalem','Jerusalem'],['hebron','Hebron'],['gaza','Gaza (Philistine)'],['jericho','Jericho']],
+ flows:[{f:A.JERU,t:A.BAB,col:'disp',n:5,cv:40},{f:A.SAM,t:A.ASSY,col:'disp',n:4,cv:-30}],
+ body:[`Highland villages harden into two kingdoms: <strong>Israel</strong> in the north (capital Samaria) and <strong>Judah</strong> in the south (capital Jerusalem). The Bible remembers a united monarchy under David and Solomon; archaeology confirms Israel and Judah as real Iron Age kingdoms, while the scale of the united monarchy remains debated. Jerusalem as Judah's royal-temple city is firmly historical.`,
+ `On the southern coast sit the five Philistine cities — Gaza, Ashkelon, Ashdod, Ekron, Gath. From their name, <strong>Peleset</strong>, Greek and Roman writers would later coin “Palestine.”`,
+ `Then the empires come. Assyria erases Israel and deports it in <strong>722 BCE</strong> (${g('losttribes','the “lost tribes”')}). Babylon takes Judah, burns the ${g('firsttemple','First Temple')}, and exiles its elite in <strong>586 BCE</strong>.`],
+ bible:null,
+ gap:`586 BCE opens the first great rupture. Judah's leaders are carried to Babylon — and the strange new idea begins: a people bound to a land even while exiled from it.`,
+ stories:[{loc:'jerusalem',sk:'#d39e74',hr:'#3a2412',prop:'📜',role:'A Judean Jewish scribe in Jerusalem',text:'copies psalms by oil-lamp as Babylon\'s army camps outside the walls. Soon he will be marched east — and will keep writing there.'},
+ {loc:'nablus',sk:'#a96b3d',hr:'#2a1a0e',prop:'🌾',role:'An Israelite farmer near Samaria',text:'watches Assyrian soldiers settle strangers on his land after the deportations. His own people vanish into legend.'},
+ {loc:'gaza',sk:'#c08552',hr:'#1a1410',prop:'⚓',role:'A Philistine trader in Gaza',text:'hears inland kingdoms argue over kings and prophets while his port looks outward, toward Egypt, Cyprus, and the sea.'}]},
+
+{ id:'persia',cyr:'539–332 BCE',cnm:'Persian Return',swatch:'#4f7194',range:'Persian Period',name:'The Return',
+ land:[['Province','Yehud'],['Persian term','“Beyond the River”']],
+ essence:'Permission to return — and a Second Temple, governed from afar.',
+ powerCenter:{city:'Persepolis',pos:'persepolis',distanceMiles:930,travelTime:'40 days by royal road',kind:'Persian imperial administration'},
+ terr:[{zone:'land',fill:'#4f7194',op:.42,label:'YEHUD',lx:215,ly:300}],
+ places:[['jerusalem','Jerusalem'],['jericho','Jericho'],['hebron','Hebron']],
+ flows:[{f:A.BAB,t:A.JERU,col:'ret',n:5,cv:-40}],
+ body:[`Cyrus of Persia conquers Babylon and lets the exiles go home. Crucially, not all return — a thriving Babylonian ${g('diaspora')} stays, the first lasting proof that Jewish life would now exist here and elsewhere at once.`,
+ `Those who come back rebuild the Temple, completed around <strong>516 BCE</strong>, in a small, poor Persian province called Yehud — ruled, as ever, from somewhere very far away.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',sk:'#d39e74',hr:'#5a3a1e',prop:'🧱',role:'A Judean Jewish returning exile',text:'born in Babylon, has never seen Jerusalem — but comes anyway to rebuild the Temple from rubble. Her grandmother chose to stay behind.'},
+ {loc:'jericho',dx:36,dy:36,sk:'#c08552',hr:'#2a1a0e',prop:'🌾',role:'A farmer outside Jericho',text:'watches returnees pass with tools and family names, wondering which ruins will become neighbours again.'}]},
+
+{ id:'hasmon',cyr:'332–63 BCE',cnm:'Hasmonean',swatch:'#8a6a32',range:'Hellenistic Period',name:'Hasmonean Kingdom',
+ land:[['Greek','Ioudaia · Judaea'],['Hebrew','the Hasmonean state']],
+ essence:'A Greek empire, a revolt, and the last long stretch of Jewish independence.',
+ powerCenter:{city:'Jerusalem',pos:'jerusalem',distanceMiles:0,travelTime:'local Hasmonean court',kind:'Judean Jewish sovereignty'},
+ terr:[{zone:'land',fill:'#8a6a32',op:.5,label:'JUDAEA',lx:215,ly:300}],
+ places:[['jerusalem','Jerusalem'],['jericho','Jericho'],['nablus','Shechem'],['hebron','Hebron']],
+ flows:[],
+ body:[`Alexander sweeps through; after him his generals' kingdoms — the Ptolemies of Egypt, then the ${g('seleucid','Seleucids')} of Syria — rule the land and bring Greek language and culture.`,
+ `When a Seleucid king bans Jewish practice and defiles the Temple, the ${g('maccabees','Maccabees')} revolt — the event remembered at Hanukkah — and win an independent ${g('hasmonean','Hasmonean kingdom')} that swells to roughly the old biblical borders.`,
+ `It is the last era of sovereign Jewish statehood for nearly two thousand years. When Rome arrives, the long gap begins to close in.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',sk:'#c08552',hr:'#1a1410',prop:'🕎',role:'A Judean Jewish Maccabee fighter',text:'rededicates the defiled Temple after years of guerrilla war — a single jar of oil, the story goes, lasting eight nights.'},
+ {loc:'gaza',sk:'#e3b48c',hr:'#5a3a1e',prop:'🪙',role:'A Greek-speaking trader in Gaza',text:'keeps accounts in Greek while inland rebels fight over what kind of life the new kingdom will allow.'}]},
+
+{ id:'rome',cyr:'63 BCE–324 CE',cnm:'Roman Judaea',swatch:'#9e4233',range:'Roman Period',name:'Judaea → Palaestina',
+ land:[['Before 135','Judaea'],['After 135 CE','Syria Palaestina'],['Jerusalem','Aelia Capitolina']],
+ essence:'Herod’s golden Temple, two catastrophic revolts, and the renaming of the land.',
+ powerCenter:{city:'Rome',pos:'rome',distanceMiles:1430,travelTime:'6-8 weeks by sea and road',kind:'Roman imperial rule'},
+ terr:[{zone:'land',fill:'#9e4233',op:.46,label:'IUDAEA',lx:215,ly:300}],
+ places:[['jerusalem','Jerusalem / Aelia'],['bethlehem','Bethlehem'],['nazareth','Nazareth'],['tiberias','Tiberias'],['jaffa','Joppa']],
+ flows:[{f:A.JERU,t:[470,180],col:'disp',n:3,cv:20},{f:A.JERU,t:[30,40],col:'disp',n:3,cv:-20},{f:A.JERU,t:[20,520],col:'disp',n:3,cv:30},{f:A.JERU,t:[440,720],col:'disp',n:3,cv:-25},{f:A.JERU,t:[210,2],col:'disp',n:2,cv:10}],
+ body:[`Pompey brings the region under Rome. <strong>Herod the Great</strong>, a client king, rebuilds the Temple into a wonder of the ancient world — the ${g('westernwall','Western Wall')} is its surviving platform. The broad outline is supported by Roman records, Josephus, inscriptions, and archaeology. In this province, in these decades, <strong>Jesus</strong> is born and crucified, and the movement that becomes Christianity begins.`,
+ `Two revolts end the era: the Great Revolt of 66–70 CE, when Rome destroys the ${g('secondtemple','Second Temple')}, and the ${g('barkokhba','Bar Kokhba revolt')} of 132–135 CE. After crushing it, the emperor Hadrian renames the province <strong>Syria Palaestina</strong> and rebuilds Jerusalem as the pagan colony Aelia Capitolina, barring Jews from the city.`],
+ bible:null,
+ gap:`This is the deep rupture. Jewish sovereignty ends; the centre of Jewish life shifts to Babylonia and around the Mediterranean. A Jewish presence remains in the land — but as a minority, for the next 1,800 years. And the imperial name “Palestine” now sticks.`,
+ stories:[{loc:'jerusalem',sk:'#c08552',hr:'#2a1a0e',prop:'🪨',role:'A Judean Jewish mason on Herod\'s Temple',text:'hauls limestone blocks the size of wagons up to the platform — the same stones pilgrims still press their hands to today.'},
+ {loc:'jerusalem',dx:-38,dy:38,sk:'#d39e74',hr:'#3a2412',prop:'🥀',role:'A Judean Jewish family fleeing Jerusalem, 70 CE',text:'joins the roads out as the Temple burns behind them, carrying what they can toward a diaspora that will last two thousand years.'},
+ {loc:'nablus',dx:38,dy:-30,sk:'#a96b3d',hr:'#1a1410',prop:'⛰️',role:'A Samaritan worshipper near Shechem',text:'keeps prayers turned toward Mount Gerizim, belonging to a community older than the empires now taxing it.'}]},
+
+{ id:'byz',cyr:'324–636 CE',cnm:'Byzantine',swatch:'#5f7d6b',range:'Late Antiquity',name:'The Christian Holy Land',
+ land:[['Latin/Greek','Palaestina Prima · Secunda · Salutaris']],
+ essence:'The land becomes Christendom’s sacred geography.',
+ powerCenter:{city:'Constantinople',pos:'constantinople',distanceMiles:720,travelTime:'12 days by fast courier',kind:'Christian Byzantine imperial rule'},
+ terr:[{zone:'land',fill:'#5f7d6b',op:.46,label:'PALAESTINA',lx:212,ly:300}],
+ places:[['jerusalem','Jerusalem'],['bethlehem','Bethlehem'],['nazareth','Nazareth'],['acre','Ptolemais']],
+ flows:[{f:A.EUR,t:A.JERU,col:'pil',n:3,cv:30},{f:[470,200],t:A.JERU,col:'pil',n:2,cv:-30}],
+ body:[`Constantine converts the empire; his mother Helena tours the province identifying holy places, and the ${g('holysepulchre','Church of the Holy Sepulchre')} and the Church of the Nativity rise over them. Pilgrims pour in.`,
+ `The land is now Christian <strong>Palaestina</strong>, split into three provinces and governed from Constantinople. Jews are largely barred from Jerusalem; the Samaritan community, centred on Nablus, is reduced by failed revolts.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',sk:'#e3b48c',hr:'#5a3a1e',prop:'🕯️',role:'A Christian pilgrim from Gaul',text:'weeps at the newly built Holy Sepulchre, having walked for the better part of a year to reach it.'},
+ {loc:'nazareth',dx:34,dy:23,sk:'#c08552',hr:'#1a1410',prop:'🍞',role:'A local Christian baker in Nazareth',text:'works in Aramaic and Greek, selling bread to monks, soldiers, and neighbours whose families never left.'},
+ {loc:'tiberias',dx:35,dy:30,sk:'#d39e74',hr:'#3a2412',prop:'📖',role:'A Jewish teacher near Tiberias',text:'teaches children beside the lake, where Jewish learning continues even as Jerusalem is mostly closed to them.'}]},
+
+{ id:'islam',cyr:'636–1099',cnm:'Caliphates',swatch:'#2f7d68',range:'Early Islamic',name:'Jund Filasṭīn',
+ land:[['Arabic district','Jund Filasṭīn'],['Jerusalem','al-Quds · Bayt al-Maqdis']],
+ essence:'A new faith, the Dome of the Rock, and the Arabic name Filasṭīn.',
+ powerCenter:{city:'Damascus / Baghdad / Cairo',pos:'damascus',distanceMiles:'135-870',travelTime:'days to weeks by caravan',kind:'Muslim caliphal rule from distant capitals'},
+ terr:[{zone:'land',fill:'#2f7d68',op:.46,label:'JUND FILASṬĪN',lx:205,ly:300}],
+ places:[['jerusalem','al-Quds'],['ramla','Ramla'],['acre','ʿAkka'],['gaza','Ghazza'],['tiberias','Ṭabariyya']],
+ flows:[],
+ body:[`Within a few years of Muhammad's death, Arab Muslim armies take the region from Byzantium (636–638). Jerusalem becomes <strong>al-Quds</strong>, “the Holy”; the Umayyads raise the ${g('domeofrock','Dome of the Rock')} (691) and Al-Aqsa Mosque on the ${g('haram','Haram al-Sharif / Temple Mount')} — where tradition places Muhammad's night journey.`,
+ `The land is run as the district of <strong>Jund Filasṭīn</strong>, its capital the newly founded town of Ramla — but power sits far away, with a ${g('caliphate','caliphate')} in Damascus, then Baghdad, then Cairo. Over centuries the population gradually becomes majority Arabic-speaking and Muslim, while large Christian and Jewish communities remain.`],
+ bible:null,
+ gap:`Power still sits elsewhere. Damascus, Baghdad, and Cairo make the largest decisions while local communities keep praying, trading, farming, and naming the same places in new languages.`,
+ stories:[{loc:'jerusalem',dx:-40,dy:20,sk:'#a96b3d',hr:'#1a1410',prop:'🕌',role:'An Arab Muslim stonecarver in Jerusalem, 691',text:'sets the last mosaic on the Dome of the Rock, the most dazzling thing his hands have ever touched.'},
+ {loc:'ramla',dx:34,dy:-28,sk:'#c08552',hr:'#2a1a0e',prop:'🏙️',role:'An Arab Muslim merchant in new-built Ramla',text:'opens his shop in the only city the Arab governors founded from scratch — soon the busy capital of the district.'},
+ {loc:'bethlehem',sk:'#e3b48c',hr:'#5a3a1e',prop:'⛪',role:'A Christian monk in Bethlehem',text:'copies prayers under new rulers, learning which taxes changed and which bells may still ring.'}]},
+
+{ id:'crusader',cyr:'1099–1291',cnm:'Crusader',swatch:'#98424a',range:'Crusades',name:'Kingdom of Jerusalem',
+ land:[['Latin','Regnum Hierosolymitanum'],['French','Outremer — “beyond the sea”']],
+ essence:'European knights seize Jerusalem; Saladin takes it back.',
+ powerCenter:{city:'Jerusalem / Acre',pos:'jerusalem',distanceMiles:0,travelTime:'local crusader court',kind:'Latin Christian crusader rule'},
+ terr:[{zone:'coast',fill:'#98424a',op:.5,label:'OUTREMER',lx:150,ly:300},{zone:'galilee',fill:'#98424a',op:.42,label:'',lx:0,ly:0}],
+ places:[['jerusalem','Jerusalem'],['acre','Acre'],['jaffa','Jaffa'],['tiberias','Tiberias']],
+ flows:[{f:[12,110],t:A.HAIFA,col:'pil',n:3,cv:25}],
+ body:[`The First ${g('crusade','Crusade')} storms Jerusalem in <strong>1099</strong> amid a massacre of its Muslim and Jewish inhabitants, founding a Latin Christian kingdom along the coast.`,
+ `In <strong>1187</strong> the Kurdish Muslim sultan ${g('saladin','Saladin')} (Ṣalāḥ ad-Dīn) defeats the Crusaders and retakes Jerusalem — comparatively without bloodshed, a contrast still invoked today. The two sides trade the land for another century until the last Crusader city, Acre, falls in 1291.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',sk:'#c08552',hr:'#1a1410',prop:'🕊️',role:'A Muslim water-seller in Jerusalem, 1187',text:'watches Saladin enter the city — and, to everyone\'s surprise, lets most of its people walk out alive.'},
+ {loc:'acre',dx:36,dy:24,sk:'#e3b48c',hr:'#6a4a2a',prop:'⚔️',role:'A Latin Christian knight from Normandy',text:'arrives by ship having sold everything for the journey, sure he is walking the very ground of scripture.'}]},
+
+{ id:'mamluk',cyr:'1291–1516',cnm:'Mamluk',swatch:'#7a6440',range:'Mamluk Era',name:'Ruled from Cairo',
+ land:[['Region','Bilād al-Shām — Greater Syria']],
+ essence:'A quiet, fortified backwater of an Egyptian empire.',
+ powerCenter:{city:'Cairo',pos:'cairo',distanceMiles:265,travelTime:'10 days by horse',kind:'Mamluk Muslim military rule'},
+ terr:[{zone:'land',fill:'#7a6440',op:.48,label:'BILĀD AL-SHĀM',lx:200,ly:300}],
+ places:[['jerusalem','al-Quds'],['hebron','al-Khalil'],['nablus','Nablus'],['gaza','Ghazza']],
+ flows:[],
+ body:[`The ${g('mamluks','Mamluks')} — a dynasty of freed slave-soldiers ruling from Cairo — govern for over two centuries. Fearing another Crusade from the sea, they deliberately ruin the coastal cities, and life moves inland to Jerusalem, Hebron, and Nablus.`,
+ `Their elegant striped stonework still lines the alleys of Jerusalem's Old City. Once again the land is a province ruled from elsewhere.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',sk:'#a96b3d',hr:'#1a1410',prop:'🪟',role:'A Muslim Mamluk architect in Jerusalem',text:'carves striped stone arches into Jerusalem\'s lanes — beauty in a province its rulers otherwise leave to drift.'},
+ {loc:'gaza',dx:38,dy:30,sk:'#c08552',hr:'#2a1a0e',prop:'🐫',role:'A caravan handler in Gaza',text:'checks water skins and saddle ropes for the road to Cairo, where the real orders come from.'}]},
+
+{ id:'ottoman',cyr:'1516–1917',cnm:'Ottoman',swatch:'#a9842f',range:'Ottoman Empire',name:'Four Centuries from Istanbul',
+ land:[['Administered as','sanjaks of Jerusalem, Nablus, Acre'],['Jewish usage','Eretz Yisrael'],['Arabic','Filasṭīn']],
+ essence:'The longest single span on this timeline — and, at its close, two national movements stir.',
+ powerCenter:{city:'Istanbul',pos:'istanbul',distanceMiles:725,travelTime:'12 days by horse',kind:'Ottoman Muslim imperial rule'},
+ terr:[{zone:'land',fill:'#a9842f',op:.46,label:'OTTOMAN SANJAKS',lx:198,ly:300}],
+ places:[['jerusalem','al-Quds'],['acre','Akka'],['jaffa','Yafa'],['nablus','Nablus'],['tiberias','Tiberias']],
+ flows:[{f:A.EUR,t:A.JAFFA,col:'jew',n:3,cv:25}],
+ body:[`The Ottomans rule for <strong>400 years</strong> — the longest unbroken stretch on this whole map. The land is split into administrative districts within larger Syrian provinces. The population is a Muslim majority with deep-rooted Christian and Jewish communities — the ${g('yishuv','“Old Yishuv”')} in Jerusalem, Safed, Hebron, and Tiberias. For most of these centuries the place is provincial and quiet.`,
+ `Late in the era two currents rise toward each other: a stirring Arab identity in the land, and — from <strong>1882</strong> — the first waves of Zionist Jewish immigration (${g('aliyah','aliyah')}), fleeing European ${g('pogrom','pogroms')} to rebuild Jewish life in the ancestral land. Herzl frames political ${g('zionism','Zionism')} in 1896.`],
+ bible:null,
+ gap:`Two modern national languages begin to gather around the same land. They are not yet the whole story, but they are now close enough to change everything.`,
+ stories:[{loc:'nablus',sk:'#c08552',hr:'#2a1a0e',prop:'🫒',role:'A Palestinian Arab olive farmer near Nablus',text:'presses oil as his family has for centuries, paying his tax to a governor who answers to distant Istanbul.'},
+ {loc:'jaffa',dx:38,dy:25,sk:'#e3b48c',hr:'#5a3a1e',prop:'🚢',role:'A Jewish migrant from Odessa, 1890s',text:'steps off a boat at Jaffa, fleeing the pogroms, to drain marshes and plant orange groves with the First Aliyah.'},
+ {loc:'tiberias',sk:'#d39e74',hr:'#3a2412',prop:'🧵',role:'A Sephardi Jewish weaver in Tiberias',text:'keeps a family workshop alive, speaking Ladino at home and bargaining in Arabic at the market.'}]},
+
+{ id:'mandate',cyr:'1917–1948',cnm:'British Mandate',swatch:'#6f6e66',range:'British Mandate',name:'Mandatory Palestine',
+ land:[['Official','Mandatory Palestine'],['Hebrew','Eretz Yisrael'],['Arabic','Filasṭīn']],
+ essence:'One land, two national movements, and an imperial promise made twice.',
+ powerCenter:{city:'London',pos:'london',distanceMiles:2250,travelTime:'8 days by rail and ship',kind:'British colonial mandate rule'},
+ terr:[{zone:'land',fill:'#6f6e66',op:.5,label:'PALESTINE',lx:205,ly:300}],
+ places:[['jerusalem','Jerusalem'],['jaffa','Jaffa / Tel Aviv'],['haifa','Haifa'],['gaza','Gaza'],['nablus','Nablus']],
+ flows:[{f:A.EUR,t:A.HAIFA,col:'jew',n:4,cv:30},{f:A.EUR2,t:A.JAFFA,col:'jew',n:4,cv:15}],
+ body:[`In WWI Britain takes Palestine from the Ottomans. The 1917 ${g('balfour','Balfour Declaration')} backs “a national home for the Jewish people” while promising not to prejudice the rights of “existing non-Jewish communities” — a tension never resolved.`,
+ `Under the ${g('mandate','British Mandate')}, Jewish immigration and land purchase grow, driven by rising danger in Europe, Nazism, and the ${g('holocaust','Holocaust')}; Palestinian Arab resistance grows too, including the Arab Revolt of 1936–39. Britain's 1937 Peel Commission first proposes splitting the land in two.`,
+ `In <strong>1947</strong> the United Nations votes (${g('res181','Resolution 181')}) to partition Palestine into a Jewish and an Arab state, with Jerusalem internationalised. Jewish leaders accept; Arab leaders and states reject it as unjust to the majority population. War follows.`],
+ bible:null,gap:null,
+ stories:[{loc:'jaffa',sk:'#c08552',hr:'#1a1410',prop:'📰',role:'A Palestinian Arab teacher in Jaffa',text:'reads of the Peel plan to cut her country in two, and argues about it with her brothers late into the night.'},
+ {loc:'haifa',sk:'#e3b48c',hr:'#3a2412',prop:'🧳',role:'A Jewish refugee from Germany, 1939',text:'reaches Haifa with one suitcase, just ahead of a door closing forever on the Europe she fled.'},
+ {loc:'jerusalem',dx:38,dy:-38,sk:'#d39e74',hr:'#5a3a1e',prop:'🖋️',role:'A British clerk in Jerusalem',text:'stamps files about land, schools, and police, never quite understanding how much life each folder contains.'}]},
+
+{ id:'48',cyr:'1947–1949',cnm:'1948',swatch:'#c98a3a',range:'1948',name:'Independence · Nakba',
+ land:[['Hebrew','the State of Israel'],['Arabic','al-Nakba — “the Catastrophe”']],
+ essence:'One people’s founding is also another people’s great loss.',
+ powerCenter:{city:'Tel Aviv / Amman / Cairo',pos:'telaviv',distanceMiles:'35-265',travelTime:'hours to days',kind:'new Israeli state, Jordanian and Egyptian control zones'},
+ terr:[{zone:'land',fill:'#c98a3a',op:.5,label:'ISRAEL',lx:160,ly:300},{zone:'westbank',fill:'#6f6494',op:.62,label:'WEST BANK',lx:282,ly:292,sub:''},{zone:'gaza',fill:'#a96a4a',op:.7,label:'',lx:0,ly:0}],
+ places:[['jerusalem','Jerusalem (divided)'],['jaffa','Tel Aviv–Jaffa'],['haifa','Haifa'],['gaza','Gaza (Egypt)'],['nablus','Nablus (Jordan)']],
+ flows:[{f:A.JAFFA,t:A.GAZA,col:'disp',n:4,cv:30},{f:[172,300],t:A.WB,col:'disp',n:4,cv:-20},{f:A.HAIFA,t:A.LEB,col:'disp',n:4,cv:20},{f:[200,300],t:A.JOR,col:'disp',n:3,cv:-30},{f:A.EUR,t:A.COAST,col:'jew',n:3,cv:25},{f:A.SE,t:[200,340],col:'jew',n:3,cv:30}],
+ body:[`On 14 May 1948 Israel declares independence; neighbouring Arab states invade. Israelis call what follows the <strong>War of Independence</strong>; Palestinians call it ${g('nakba','al-Nakba')} — the Catastrophe — when around 700,000 Palestinian Arabs flee or are expelled and hundreds of villages are emptied. In the same years and after, many Jews are pushed or driven from Arab countries, many to Israel.`,
+ `The 1949 armistice — the ${g('greenline','“Green Line”')} — leaves Israel holding more than the UN had allotted. The <strong>West Bank</strong> and the Old City are annexed by Jordan; the <strong>Gaza Strip</strong> is administered by Egypt; Jerusalem is split in two. No Palestinian Arab state is founded.`],
+ bible:null,
+ gap:`Two absences now sit beside each other: until 1948 there had been no sovereign Jewish state for nearly two millennia, and there has still never been a sovereign, independent Palestinian Arab state. Much of this history is also the history of rule from elsewhere.`,
+ stories:[{loc:'jaffa',sk:'#c08552',hr:'#1a1410',prop:'🔑',role:'A Palestinian Arab family from a village near Jaffa',text:'locks the front door in 1948 and keeps the key, certain they will return within weeks. They never can; the key passes to their children.'},
+ {loc:'jerusalem',dx:28,dy:34,sk:'#e3b48c',hr:'#2a1a0e',prop:'🧳',role:'A Jewish family from Baghdad',text:'is stripped of citizenship and property and flown to a tent camp in the new state — among hundreds of thousands leaving the Arab world.'},
+ {loc:'haifa',sk:'#d39e74',hr:'#3a2412',prop:'🏥',role:'A nurse in Haifa, 1948',text:'changes bandages for people who call the same streets by different names, and knows none of them will be unchanged.'}]},
+
+{ id:'67',cyr:'1967–1993',cnm:'1967 · Occupation',swatch:'#b9742e',range:'After 1967',name:'Six Days, and After',
+ land:[['Israeli usage','Judea & Samaria'],['Common usage','the Occupied Territories']],
+ essence:'In six days the map is redrawn — and a long occupation begins.',
+ powerCenter:{city:'Jerusalem / Tel Aviv',pos:'jerusalem',distanceMiles:0,travelTime:'local Israeli government',kind:'Israeli state power and military occupation'},
+ terr:[{zone:'land',fill:'#c98a3a',op:.5,label:'ISRAEL',lx:155,ly:300},{zone:'westbank',fill:'#7a6a3a',op:.66,label:'WEST BANK',lx:282,ly:292,sub:''},{zone:'gaza',fill:'#7a6a3a',op:.78,label:'',lx:0,ly:0}],
+ places:[['jerusalem','Jerusalem (united)'],['hebron','Hebron'],['nablus','Nablus'],['gaza','Gaza'],['jericho','Jericho']],
+ flows:[{f:A.WB,t:A.JOR,col:'disp',n:4,cv:-30},{f:A.COAST,t:A.WB,col:'set',n:3,cv:20}],
+ body:[`In June 1967, facing mobilising Arab armies, Israel launches a pre-emptive war and in <strong>six days</strong> captures the West Bank and East Jerusalem (from Jordan), the Gaza Strip and Sinai (from Egypt), and the Golan Heights (from Syria).`,
+ `It is a transforming victory — and the start of a military ${g('occupation','occupation')} of the Palestinian territories that continues, in changing forms, to this day. Jewish ${g('settlements','settlements')} begin to be built there, which most of the world regards as illegal under international law (Israel disputes this).`,
+ `The 1973 war leads in time to peace with Egypt and the return of Sinai. In 1987 the first Palestinian ${g('intifada','intifada')} erupts.`],
+ bible:null,gap:null,
+ stories:[{loc:'hebron',sk:'#e3b48c',hr:'#3a2412',prop:'🏘️',role:'An Israeli Jewish settler couple, 1970s',text:'moves into one of the first hilltop settlements, certain they are returning to the biblical Judea of their ancestors.'},
+ {loc:'nablus',sk:'#c08552',hr:'#1a1410',prop:'🪪',role:'A Palestinian student in Nablus',text:'learns to live under military rule — checkpoints, permits, and a new word for ordinary life: occupation.'},
+ {loc:'jerusalem',dx:35,dy:10,sk:'#d39e74',hr:'#5a3a1e',prop:'📻',role:'An Israeli radio operator, June 1967',text:'hears breathless reports from the Old City and understands that victory will also bring a new burden.'}]},
+
+{ id:'oslo',cyr:'1993–2023',cnm:'Oslo & After',swatch:'#4f7c6c',range:'The Oslo Era',name:'A Process, Not a State',
+ land:[['Created 1994','the Palestinian Authority'],['West Bank split into','Areas A · B · C']],
+ essence:'A peace process that built institutions but never a state.',
+ powerCenter:{city:'Jerusalem / Ramallah',pos:'ramallah',distanceMiles:9,travelTime:'under an hour, checkpoints permitting',kind:'Israeli state power plus Palestinian Authority administration'},
+ terr:[{zone:'land',fill:'#c98a3a',op:.48,label:'ISRAEL',lx:155,ly:300},{zone:'westbank',fill:'#3f7c6c',op:.66,label:'WEST BANK',lx:282,ly:292,sub:''},{zone:'gaza',fill:'#2f6b58',op:.82,label:'',lx:0,ly:0}],
+ places:[['jerusalem','Jerusalem'],['ramallah','Ramallah'],['hebron','Hebron'],['gaza','Gaza'],['bethlehem','Bethlehem']],
+ flows:[{f:A.COAST,t:A.WB,col:'set',n:4,cv:20},{f:A.JERU,t:[292,300],col:'set',n:2,cv:-15}],
+ body:[`The ${g('oslo','Oslo Accords')} (1993–95) bring mutual recognition between Israel and the ${g('plo','PLO')} and create the ${g('pa','Palestinian Authority')} to govern Palestinian population centres. The West Bank is carved into ${g('areas','Areas A, B, and C')} — with Area C, about 60% and home to the settlements, under Israeli control.`,
+ `The promised final deal — borders, Jerusalem, refugees — is never reached. Instead: the ${g('secondintifada','Second Intifada')} (2000–05); Israel's separation barrier; the 2005 withdrawal of settlers from Gaza; and in 2007 a split, as ${g('hamas','Hamas')} takes Gaza while the PA keeps the West Bank. Settlements expand; the two-state idea stays on paper.`],
+ bible:null,gap:null,
+ stories:[{loc:'ramallah',sk:'#c08552',hr:'#1a1410',prop:'🤝',role:'A Palestinian shopkeeper in Ramallah, 1994',text:'watches the new Palestinian Authority raise its flag, daring to believe a state is finally on its way.'},
+ {loc:'jerusalem',sk:'#e3b48c',hr:'#3a2412',prop:'🚌',role:'An Israeli Jewish commuter in Jerusalem, 2002',text:'changes which bus she takes during the Second Intifada, when an ordinary ride can turn deadly.'},
+ {loc:'gaza',sk:'#d39e74',hr:'#2a1a0e',prop:'🎣',role:'A fisherman in Gaza, 2006',text:'checks the horizon before checking his nets, because politics now decides how far the boat may go.'}]},
+
+{ id:'now',cyr:'2023–2026',cnm:'The Present',swatch:'#a23a2e',range:'The Present',name:'War, and a Fragile Pause',
+ land:[['Today','Israel / the Occupied Palestinian Territory'],['Status','unresolved']],
+ essence:'After a devastating rupture, a ceasefire that holds by a thread.',
+ powerCenter:{city:'Jerusalem / Ramallah / Gaza',pos:'jerusalem',distanceMiles:'0-48',travelTime:'minutes to hours',kind:'contested Israeli, PA, and Hamas power under war and ceasefire'},
+ terr:[{zone:'land',fill:'#c98a3a',op:.48,label:'ISRAEL',lx:155,ly:300},{zone:'westbank',fill:'#3f7c6c',op:.64,label:'WEST BANK',lx:282,ly:292,sub:''},{zone:'gaza',fill:'#a23a2e',op:.82,label:'',lx:0,ly:0}],
+ places:[['jerusalem','Jerusalem'],['gaza','Gaza'],['hebron','Hebron'],['ramallah','Ramallah']],
+ flows:[{f:[120,470],t:[95,540],col:'disp',n:5,cv:-15},{f:A.COAST,t:A.WB,col:'set',n:3,cv:20}],
+ body:[`On <strong>7 October 2023</strong>, ${g('hamas','Hamas')}-led fighters break out of Gaza and kill about 1,200 people in Israel and seize roughly 250 hostages — the deadliest day for Jews since the Holocaust. Israel's response, a devastating war in Gaza, kills tens of thousands of Palestinians and destroys much of the territory.`,
+ `After two years, ${g('ceasefire2025','a ceasefire announced on 10 October 2025')} pauses the fighting, returns hostages and prisoners, and surges aid. Israeli forces hold behind a ${g('yellowline','“Yellow Line”')} — roughly half of Gaza — while a US-brokered plan and ${g('res2803','UN Resolution 2803')} envision a transitional, technocratic governance.`,
+ `As of 2026 the ceasefire is real but fragile: strikes continue, Gaza risks being split in two, the West Bank is tense — and the deep questions of <strong>borders, Jerusalem, refugees, sovereignty, and security</strong> remain exactly as open as they were in 1947.`],
+ bible:null,gap:null,
+ stories:[{loc:'jerusalem',dx:-45,dy:35,sk:'#e3b48c',hr:'#2a1a0e',prop:'🕯️',role:'An Israeli Jewish mother, Oct 2023',text:'waits for word of a child taken hostage, in a week that breaks every ordinary measure of fear.'},
+ {loc:'gaza',dx:38,dy:30,sk:'#c08552',hr:'#1a1410',prop:'⛺',role:'A Palestinian girl in Gaza, 2025',text:'moves with her family for the ninth time, toward a coast growing more crowded as the Yellow Line presses in. The ceasefire holds, barely.'},
+ {loc:'ramallah',dx:38,dy:-48,sk:'#d39e74',hr:'#3a2412',prop:'📱',role:'A Palestinian student in Ramallah, 2026',text:'refreshes the news before class, learning history as something that interrupts homework.'}]}
+];
+const FOOT="The land has been called Canaan, Israel and Judah, Judaea, Palaestina, Filasṭīn, the Holy Land, Outremer, and Eretz Yisrael. It has been governed from nearby courts and faraway capitals. Today, Israelis and Palestinians both carry living ties to it, and any honest map has to hold more than one story at once.";
+
+// ═══════ BUILD ═══════
+const SVG='http://www.w3.org/2000/svg';
+const map=document.getElementById('map');
+function el(t,a){const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function svgText(cls,x,y,text,attrs={}){const t=el('text',{class:cls,x,y,...attrs});t.textContent=text;return t;}
+map.appendChild(el('rect',{x:0,y:-58,width:480,height:1003,fill:'#dccfa9'}));
+map.appendChild(el('path',{class:'sea',d:'M0,-58 L184,-58 L184,62 L162,118 L154,198 L142,282 L130,362 L112,444 L92,500 L72,544 L0,566 Z'}));
+// southern desert fills the whole bottom (muted), so no bare parchment shows
+map.appendChild(el('path',{class:'landbase context-land',d:'M0,566 L72,544 L94,610 L128,704 L168,790 L0,945 Z',opacity:.42}));
+map.appendChild(el('path',{class:'landbase context-land',d:'M332,70 C378,115 405,205 405,315 C405,430 365,545 304,664 L480,945 L480,-58 L352,-58 Z',opacity:.28}));
+map.appendChild(el('path',{class:'landbase context-land',d:'M0,820 L480,820 L480,945 L0,945 Z',opacity:.3}));
+map.appendChild(el('path',{class:'landbase',d:PATHS.land}));
+// a narrow Red Sea gulf below the southern tip
+map.appendChild(el('path',{class:'sea',d:'M140,772 L170,792 L206,864 L192,945 L120,945 L110,800 Z'}));
+const baseG=el('g',{}); map.appendChild(baseG);
+[
+ 'M222,130 C238,190 236,245 226,302 C216,360 228,420 210,505',
+ 'M248,150 C260,218 264,286 255,350 C247,410 250,462 230,540',
+ 'M142,210 C154,282 146,352 124,445',
+ 'M178,520 C205,590 202,662 172,740'
+].forEach(d=>baseG.appendChild(el('path',{class:'relief',d})));
+baseG.appendChild(el('path',{class:'base-line',d:'M160,118 C154,200 144,286 132,362 C122,430 98,502 78,548'}));
+// ── cartographic flourishes (in empty water, under labels & overlays) ──
+const TRADE_INFO={
+ orientation:'This strip is one of the great trade corridors of the ancient world. The coast road — later called the Via Maris — and the inland King’s Highway carried grain, olive oil, wine, copper, and incense between Egypt, Arabia, Syria, and Mesopotamia. Whoever held the corridor could tax what passed.',
+ canaan:'Canaanite cities grew rich brokering trade between Egypt and Mesopotamia — pottery, cedar, oil, wine, and purple dye. Canaanite merchants carried something else too: the alphabet, which travelled the trade routes with their goods.',
+ israel:'Israel, Judah, and the Philistine ports sat astride the caravan roads. Grain and olive oil shipped from the coast; gold, spices, and incense came north from Arabia along the King’s Highway, taxed by whoever ruled the passes.',
+ persia:'Under the Persian peace the roads reopened and coined money arrived. The small province of Yehud traded oil, wine, and grain inside an empire that reached from the Nile to India.',
+ hasmon:'The Hasmoneans fought hard to seize the coastal ports and trade roads — control of the routes that carried Arabian incense and spice to the Mediterranean was control of real wealth.',
+ rome:'Roman roads and ports made the province a hub. Olive oil, wine, Jericho’s prized balsam, and Dead Sea salt and bitumen flowed out through Caesarea to markets across the empire.',
+ byz:'Pilgrimage became its own economy — relics, holy oil, and souvenirs — layered on top of the older export trade in wine, oil, and grain that helped feed Constantinople.',
+ islam:'Now part of vast caliphates, the land lay on routes linking Damascus, Cairo, and the Hejaz. Newly founded Ramla thrived on the roads; soap, olive oil, and glass were shipped outward.',
+ crusader:'Crusader ports — Acre above all — grew immensely wealthy as gateways for the spice and silk trade between Europe and the East. Sugar, glass, and dyes moved through Outremer.',
+ mamluk:'Fearing another Crusade, the Mamluks deliberately ruined the coast, so trade shifted inland. Caravans of soap, cotton, and grain moved toward Cairo, where the real power sat.',
+ ottoman:'Ottoman roads carried Nablus soap, Hebron glass, Gaza grain, and Jaffa’s oranges. Trade and pilgrim caravans tied the land to Damascus and the wider empire.',
+ mandate:'Under British rule, Jaffa oranges became a famous world export and Haifa a modern deep-water port. Roads and railways bound the economy to Europe — even as the political conflict sharpened.',
+ '48':'The 1948 war shattered the old trade networks. New armistice lines cut farmers off from their markets and ports, and Jaffa’s celebrated orange groves changed hands amid the displacement.',
+ '67':'Occupation rewired the economy. Palestinian labour and produce became tied to Israel, while checkpoints, permits, and roads increasingly decided what could move, and where.',
+ oslo:'Closures, permits, and the separation barrier made moving Palestinian goods slow and costly, while Israel’s economy globalised. The same small corridor now carried deeply unequal traffic.',
+ now:'Gaza’s crossings and the West Bank’s checkpoints make ordinary trade a daily struggle. The free movement that once defined this corridor is, for many who live here, exactly what is missing.'
+};
+// ── cartographic flourishes (in empty water, under labels & overlays) ──
+const deco=el('g',{class:'deco'}); baseG.appendChild(deco);
+function wave(x,y,s=1){const g=el('g',{class:'deco'});
+ g.appendChild(el('path',{class:'deco-wave',d:`M${x},${y} q${5*s},${-4*s} ${10*s},0 q${5*s},${4*s} ${10*s},0`}));
+ return g;}
+[[46,250,1],[40,470,1.1],[58,540,1],[110,860,1.1],[150,895,1],[420,300,1]].forEach(([x,y,s])=>deco.appendChild(wave(x,y,s)));
+// little sailing ship in the mid Mediterranean
+const ship=el('g',{class:'deco-ship',transform:'translate(54,410) scale(1.05)'});
+ship.appendChild(el('path',{d:'M-13,6 Q0,14 13,6 L10,6 L-10,6 Z'}));   // hull
+ship.appendChild(el('line',{x1:0,y1:6,x2:0,y2:-13}));                   // mast
+ship.appendChild(el('path',{class:'sail',d:'M1,-12 Q11,-5 1,2 Z'}));    // sail
+ship.appendChild(el('path',{d:'M0,-13 l0,-3'}));                        // pennant pole
+deco.appendChild(ship);
+// a friendly sea-serpent loop, tucked toward the Sinai side
+const serpent=el('g',{class:'deco-serpent',transform:'translate(54,768)'});
+serpent.appendChild(el('path',{d:'M-14,8 q6,-12 12,0 q6,12 12,0 q6,-12 12,0'}));
+serpent.appendChild(el('circle',{cx:24,cy:4,r:2.4,fill:'#6f8487',stroke:'none'})); // head
+deco.appendChild(serpent);
+// compass rose, in the open Red Sea at the bottom
+const comp=el('g',{class:'deco-compass',transform:'translate(156,892)'});
+comp.appendChild(el('circle',{cx:0,cy:0,r:17}));
+comp.appendChild(el('circle',{cx:0,cy:0,r:11}));
+comp.appendChild(el('path',{class:'star2',d:'M0,-15 L4,0 L0,15 L-4,0 Z'}));
+comp.appendChild(el('path',{class:'star2',d:'M-15,0 L0,4 L15,0 L0,-4 Z'}));
+comp.appendChild(el('path',{class:'star',d:'M0,-16 L3,0 L0,16 L-3,0 Z',transform:'rotate(0)'}));
+comp.appendChild(svgText('','0','-19','N'));
+deco.appendChild(comp);
+// ── trade goods drifting along the coast road (timeless crossroads traffic) ──
+const tradeRoute='M150,150 C140,300 120,470 132,690';
+[['🫒',0,26],['🏺',7.5,30],['🧂',15,24]].forEach(([emoji,delay,dur])=>{
+ const tg=el('text',{class:'trade-good',x:0,y:0,tabindex:'0',role:'button','aria-label':'Trade routes'});tg.textContent=emoji;
+ const m=el('animateMotion',{dur:dur+'s',begin:'-'+delay+'s',repeatCount:'indefinite',path:tradeRoute,rotate:'0',keyPoints:'0;1',keyTimes:'0;1',calcMode:'linear'});
+ tg.appendChild(m);
+ const openTrade=ev=>{ev.stopPropagation();const e=ERAS[idx];openInfoBubble(emoji,'Trade & roads',TRADE_INFO[e.id]||TRADE_INFO.orientation,132,418);};
+ tg.addEventListener('click',openTrade);
+ tg.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openTrade(ev);}});
+ deco.appendChild(tg);}
+);
+const terrG=el('g',{}); map.appendChild(terrG);
+map.appendChild(el('ellipse',{class:'sea',cx:299,cy:184,rx:18,ry:27,stroke:'#8fa4a5','stroke-width':1}));
+map.appendChild(el('path',{class:'sea',d:'M285,348 Q302,352 301,394 Q301,442 287,448 Q276,404 282,360 Z',stroke:'#8fa4a5','stroke-width':1}));
+map.appendChild(el('path',{class:'river',d:'M302,211 C308,248 306,284 304,312 C303,328 302,338 300,348'}));
+const powerG=el('g',{}); map.appendChild(powerG);
+const geoLabelG=el('g',{}); map.appendChild(geoLabelG);
+geoLabelG.appendChild(svgText('sea-lbl',42,314,'Mediterranean Sea',{transform:'rotate(-73 42 314)'}));
+geoLabelG.appendChild(svgText('sea-lbl',150,850,'Red Sea',{'text-anchor':'middle',transform:'rotate(80 150 850)'}));
+geoLabelG.appendChild(svgText('base-lbl',296,168,'Sea of Galilee',{'text-anchor':'middle'}));
+geoLabelG.appendChild(svgText('base-lbl',316,398,'Dead Sea',{'text-anchor':'start',transform:'rotate(86 316 398)'}));
+geoLabelG.appendChild(svgText('base-lbl',306,294,'Jordan River',{'text-anchor':'start',transform:'rotate(82 306 294)'}));
+geoLabelG.appendChild(svgText('base-lbl',95,322,'Coast Road',{'text-anchor':'middle',transform:'rotate(-78 95 322)'}));
+geoLabelG.appendChild(svgText('base-lbl',255,492,'Judean Hills',{'text-anchor':'middle',transform:'rotate(-72 255 492)'}));
+geoLabelG.appendChild(svgText('base-lbl',162,650,'Negev',{'text-anchor':'middle'}));
+geoLabelG.appendChild(svgText('base-lbl',392,500,'Arabian Desert',{'text-anchor':'middle',transform:'rotate(-72 392 500)'}));
+const flowG=el('g',{}); map.appendChild(flowG);
+const sacredG=el('g',{});
+const dotG=el('g',{}); map.appendChild(dotG);
+const npcG=el('g',{}); map.appendChild(npcG);
+const factG=el('g',{}); map.appendChild(factG);
+const palG=el('g',{class:'pal-layer',style:'display:none'}); map.appendChild(palG);
+map.appendChild(sacredG);
+
+const railEl=document.getElementById('rail');
+ERAS.forEach((e,i)=>{const c=document.createElement('button');c.className='chip';c.dataset.i=i;
+ c.innerHTML=`<span class="cyr">${e.cyr}</span><span class="cnm">${e.cnm}</span><span class="swatch" style="background:${e.swatch}"></span>`;
+ c.addEventListener('click',()=>go(i,true));railEl.appendChild(c);});
+
+const voiceRibbon=document.getElementById('voiceRibbon');
+const VOICES=[];
+ERAS.forEach((e,ei)=>(e.stories||[]).forEach((s,si)=>VOICES.push({e,ei,s,si})));
+VOICES.forEach((v,vi)=>{const b=document.createElement('button');b.className='voice-dot';b.dataset.voice=vi;
+ b.innerHTML=`<span class="emo">${v.s.prop}</span><span class="yr">${v.e.cyr}</span>`;
+ b.title=v.s.role;b.addEventListener('click',()=>openVoice(vi));voiceRibbon.appendChild(b);});
+
+
+
+function paintTerr(e){terrG.innerHTML='';
+ e.terr.forEach(t=>{if(!PATHS[t.zone])return;terrG.appendChild(el('path',{class:'terr',d:PATHS[t.zone],fill:t.fill,'fill-opacity':t.op,stroke:t.fill,'stroke-opacity':.55}));});
+ e.terr.forEach(t=>{if(t.label){const tx=el('text',{class:'terr-lbl',x:t.lx,y:t.ly,'text-anchor':'middle'});tx.textContent=t.label;terrG.appendChild(tx);
+  if(t.sub){const s=el('text',{class:'terr-lbl',x:t.lx,y:t.ly+15,'text-anchor':'middle','font-size':'10px',opacity:'.75'});s.textContent=t.sub;terrG.appendChild(s);}}});}
+
+function pcPos(pc){return POWERPOS[pc.pos]||pc.xy||A.JERU;}
+function powerLabelAttrs(p){if(Math.hypot(p[0]-A.JERU[0],p[1]-A.JERU[1])<18)return{x:p[0]+22,y:p[1]-16,'text-anchor':'start'};if(p[0]>360)return{x:p[0]-10,y:p[1]+4,'text-anchor':'end'};if(p[0]<80)return{x:p[0]+10,y:p[1]+4,'text-anchor':'start'};return{x:p[0]+9,y:p[1]+4,'text-anchor':'start'};}
+function transportIcon(e){return ({canaan:'🐪',persia:'🐎',rome:'⛵',byz:'🐎',islam:'🐪',mamluk:'🐎',ottoman:'🐎',mandate:'🚂','48':'🚚',now:'📱'}[e.id]||'✉️');}
+function powerEmoji(pc){return POWER_EMOJI[pc.pos]||'🏛️';}
+function paintPower(e){powerG.innerHTML='';
+ const pc=e.powerCenter;if(!pc){document.getElementById('powerCard').innerHTML='';return;}
+ const p=pcPos(pc), j=A.JERU;
+ if(Math.hypot(p[0]-j[0],p[1]-j[1])>12){
+  let dx=p[0]-j[0],dy=p[1]-j[1];const len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
+  const wander=Math.min(72,Math.max(28,len*.16));
+  const c1=[j[0]+dx*.28+nx*wander,j[1]+dy*.28+ny*wander];
+  const c2=[j[0]+dx*.72-nx*wander*.75,j[1]+dy*.72-ny*wander*.75];
+  const d=`M${j[0]},${j[1]} C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${p[0]},${p[1]}`;
+  const courierD=`M${p[0]},${p[1]} C${c2[0]},${c2[1]} ${c1[0]},${c1[1]} ${j[0]},${j[1]}`;
+  powerG.appendChild(el('path',{class:'power-thread-bg',d}));
+  powerG.appendChild(el('path',{class:'power-thread',d}));
+  const courier=el('g',{class:'power-courier'});
+  const carrier=el('text',{class:'carrier',x:0,y:4});carrier.textContent=transportIcon(e);courier.appendChild(carrier);
+  const mail=el('text',{class:'carrier-mail',x:0,y:-15});mail.textContent='✉️';courier.appendChild(mail);
+  const am=el('animateMotion',{dur:'8.5s',repeatCount:'indefinite',path:courierD,rotate:'0'});
+  courier.appendChild(am);powerG.appendChild(courier);
+ }
+ powerG.appendChild(el('circle',{class:'power-pin',cx:p[0],cy:p[1],r:6.5}));
+ const showPowerName=Math.hypot(p[0]-j[0],p[1]-j[1])>18 && pc.pos!=='telaviv' && pc.pos!=='ramallah';
+ if(showPowerName){
+  const tx=el('text',{class:'power-city',...powerLabelAttrs(p)});
+  tx.textContent=`${powerEmoji(pc)} ${pc.city.split('/')[0].trim()}`;powerG.appendChild(tx);
+ }
+ const dist=pc.distanceMiles===0?'local rule':`${pc.distanceMiles} miles away`;
+ document.getElementById('powerCard').innerHTML=`<div class="pk">power center</div><div class="pcity">${powerEmoji(pc)} ${pc.city}</div>${pc.kind?`<div class="rule">${pc.kind}</div>`:''}<div class="pmeta">${dist}<br>${pc.travelTime}</div>`;
+}
+
+function paintPopulation(e){const p=POPULATION[e.id];
+ const card=document.getElementById('popCard');
+ if(!p){card.innerHTML='';return;}
+ card.innerHTML=`<div class="pk">Who calls it home?</div><div class="maj">${p.who}</div><div class="also">${p.detail}</div>`;}
+
+function paintSlideNote(e){
+ document.getElementById('palNote').textContent=SLIDE_NOTES[e.id]||e.essence;
+}
+
+function paintDots(e){dotG.innerHTML='';
+ e.places.forEach(([key,label])=>{const c=CITIES[key];if(!c)return;
+  if(key==='jerusalem')dotG.appendChild(el('circle',{class:'holy',cx:c.x,cy:c.y,r:8}));
+  const h=el('circle',{class:'city-hit',cx:c.x,cy:c.y,r:16,'data-key':key});h.addEventListener('click',()=>openCart(key));dotG.appendChild(h);
+  const d=el('circle',{class:'dot',cx:c.x,cy:c.y,r:6.2,'data-key':key});d.addEventListener('click',()=>openCart(key));dotG.appendChild(d);
+  const left=c.x>250,lo=LABEL_OFFSETS[key]||{};
+  const tx=el('text',{class:'city-lbl','data-key':key,x:(lo.anchor?c.x:(left?c.x-8:c.x+8))+(lo.dx||0),y:c.y+3.5+(lo.dy||0),'text-anchor':lo.anchor||(left?'end':'start')});
+  tx.textContent=label;tx.addEventListener('click',()=>openCart(key));dotG.appendChild(tx);});}
+
+const NPC_OFFSETS=[[-33,-28],[33,28],[-33,36],[35,-36],[0,46],[0,-46]];
+function npcPoint(s,i,e){const c=CITIES[s.loc]||CITIES[e.places[Math.min(i,e.places.length-1)]?.[0]]||CITIES.jerusalem;
+ const o=NPC_OFFSETS[i%NPC_OFFSETS.length];return [c.x+(s.dx??o[0]),c.y+(s.dy??o[1])];}
+function paintNPCs(e){npcG.innerHTML='';closeNpc();
+ if(e.id==='orientation')return;
+ (e.stories||[]).slice(0,3).forEach((s,i)=>{const [x,y]=npcPoint(s,i,e);const g=el('g',{class:'npc','data-npc':i,tabindex:'0',role:'button','aria-label':s.role});
+  g.appendChild(el('circle',{class:'npc-halo',cx:x,cy:y,r:19}));
+  const t=el('text',{class:'npc-emoji',x,y:y+2.5});t.textContent=s.prop;g.appendChild(t);
+  g.addEventListener('click',()=>openNpc(s,x,y,i));g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openNpc(s,x,y,i);}});
+  npcG.appendChild(g);});}
+
+const npcBubble=document.getElementById('npcBubble');
+function openInfoBubble(icon,title,text,x,y,below=false){document.querySelectorAll('.npc').forEach(n=>n.classList.remove('act'));
+ const left=Math.min(78,Math.max(22,(x/480)*100));
+ const top=Math.min(90,Math.max(7,((y+58)/986)*100));
+ npcBubble.style.left=left+'%';npcBubble.style.top=top+'%';
+ npcBubble.classList.toggle('below',below||y<170);
+ npcBubble.innerHTML=`<button class="npc-close" aria-label="Close">×</button><div class="npc-role">${icon} ${title}</div><div class="npc-text">${text}</div>`;
+ npcBubble.querySelector('.npc-close').addEventListener('click',closeNpc);
+ npcBubble.classList.add('on');}
+function openNpc(s,x,y,i){openInfoBubble(s.prop,s.role,s.text,x,y);
+ document.querySelectorAll('.npc').forEach((n,ni)=>n.classList.toggle('act',ni===i));}
+function closeNpc(){if(!npcBubble)return;npcBubble.classList.remove('on','below');npcBubble.innerHTML='';document.querySelectorAll('.npc').forEach(n=>n.classList.remove('act'));}
+
+let holyOn=false;
+function paintSacred(e){sacredG.innerHTML='';if(!holyOn||e.id==='orientation')return;
+ (ERA_SACRED[e.id]||[]).forEach((id,i)=>{const s=SACRED_SITES[id];if(!s)return;
+  const g=el('g',{class:'sacred-node',tabindex:'0',role:'button','aria-label':s.name});
+  g.appendChild(el('circle',{class:'sacred-hit',cx:s.x,cy:s.y,r:31}));
+  g.appendChild(el('circle',{class:'sacred-glow',cx:s.x,cy:s.y,r:22}));
+  const ic=el('text',{class:'sacred-icon',x:s.x,y:s.y+1});ic.textContent=s.icon;g.appendChild(ic);
+  const tx=el('text',{class:'sacred-lbl',x:s.x,y:s.y+24});tx.textContent=s.name.split('/')[0];g.appendChild(tx);
+  g.addEventListener('click',()=>openInfoBubble(s.icon,s.name,s.text,s.x,s.y,i<2));
+  g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openInfoBubble(s.icon,s.name,s.text,s.x,s.y,i<2);}});
+  sacredG.appendChild(g);});}
+
+function paintFacts(e){factG.innerHTML='';
+ (MAP_FACTS[e.id]||[]).slice(0,e.id==='orientation'?5:3).forEach((f,i)=>{
+  const words=f.title.split(' '),lines=[''];
+  words.forEach(word=>{const last=lines[lines.length-1];if((last+' '+word).trim().length>18&&last)lines.push(word);else lines[lines.length-1]=(last+' '+word).trim();});
+  const maxLen=Math.max(...lines.map(l=>l.length));
+  const w=Math.min(196,Math.max(124,54+maxLen*6.9)),h=lines.length>1?52:42;
+  const x=Math.min(466-w,Math.max(12,f.x-w/2)),y=Math.min(838-h,Math.max(86,f.y-h/2));
+  const g=el('g',{class:'map-fact',transform:`translate(${x},${y})`,tabindex:'0',role:'button','aria-label':f.title});
+  g.appendChild(el('rect',{x:0,y:0,width:w,height:h,rx:8,ry:8}));
+  const ic=el('text',{class:'fi',x:22,y:h/2+1});ic.textContent=f.icon;g.appendChild(ic);
+  lines.forEach((line,li)=>g.appendChild(svgText('ft',42,lines.length>1?20+li*14:25,line)));
+  g.addEventListener('click',()=>openInfoBubble(f.icon,f.title,f.text,f.x,f.y));
+  g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openInfoBubble(f.icon,f.title,f.text,f.x,f.y);}});
+  factG.appendChild(g);});}
+
+function openVoice(vi){const v=VOICES[vi];if(!v)return;go(v.ei,true);
+ const [x,y]=npcPoint(v.s,v.si,v.e);openNpc(v.s,x,y,v.si);
+ document.querySelectorAll('.voice-dot').forEach((b,i)=>b.classList.toggle('on',i===vi));
+ const b=document.querySelector(`[data-voice="${vi}"]`);if(b)b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
+
+function flowLabel(e,col,lab){
+ if(e.id==='48'&&col==='disp')return 'Palestinian displacement / refugees';
+ return lab;
+}
+function paintLegend(e){const L=document.getElementById('leg');L.innerHTML='';
+ e.terr.filter(t=>t.label).forEach(t=>{const it=document.createElement('div');it.className='it';
+  it.innerHTML=`<span class="sw" style="background:${t.fill};opacity:${Math.min(1,t.op+.25)}"></span>${t.label.charAt(0)+t.label.slice(1).toLowerCase()}${t.sub?' '+t.sub:''}`;L.appendChild(it);});
+ const F=document.getElementById('flowleg');F.innerHTML='';
+ const seen={};(e.flows||[]).forEach(f=>{if(seen[f.col])return;seen[f.col]=1;const[col,lab]=FLOWCOL[f.col];
+  const it=document.createElement('div');it.className='it';it.innerHTML=`<span class="fd" style="background:${col};color:${col}"></span>${flowLabel(e,f.col,lab)}`;F.appendChild(it);});}
+
+// particles
+let parts=[],raf=null;
+function bez(f,c,t,u){const k=1-u;return{x:k*k*f[0]+2*k*u*c[0]+u*u*t[0],y:k*k*f[1]+2*k*u*c[1]+u*u*t[1]};}
+function setFlows(flows){ if(raf)cancelAnimationFrame(raf); raf=null; flowG.innerHTML=''; parts=[];
+ (flows||[]).forEach(fl=>{const[col]=FLOWCOL[fl.col];
+  const mx=(fl.f[0]+fl.t[0])/2, my=(fl.f[1]+fl.t[1])/2;
+  let dx=fl.t[0]-fl.f[0], dy=fl.t[1]-fl.f[1]; const len=Math.hypot(dx,dy)||1;
+  const ctrl=[mx - dy/len*(fl.cv||0), my + dx/len*(fl.cv||0)];
+  for(let i=0;i<fl.n;i++){const baseR=4.7+Math.random()*1.8;const node=el('circle',{class:'flow-p',r:baseR.toFixed(1),fill:col,opacity:0});flowG.appendChild(node);
+   parts.push({f:fl.f,c:ctrl,to:fl.t,t:i/fl.n+Math.random()*0.05,sp:0.0015+Math.random()*0.0012,r:baseR,phase:Math.random()*Math.PI*2,wob:3+Math.random()*4,node});}});
+ if(parts.length)tick();}
+function tick(){parts.forEach(p=>{p.t+=p.sp;if(p.t>1)p.t-=1;const q=bez(p.f,p.c,p.to,p.t);
+  const fade=Math.sin(p.t*Math.PI), drift=Math.sin(p.t*Math.PI*4+p.phase)*p.wob;
+  let dx=p.to[0]-p.f[0],dy=p.to[1]-p.f[1];const len=Math.hypot(dx,dy)||1;
+  const x=q.x-dy/len*drift,y=q.y+dx/len*drift;
+  p.node.setAttribute('cx',x.toFixed(1));p.node.setAttribute('cy',y.toFixed(1));
+  p.node.setAttribute('r',(p.r*(0.84+0.18*Math.sin(p.t*Math.PI*2+p.phase))).toFixed(1));
+  p.node.setAttribute('opacity',(0.18+0.68*fade).toFixed(2));});raf=requestAnimationFrame(tick);}
+
+let idx=0;
+function go(i,scroll){idx=(i+ERAS.length)%ERAS.length;const e=ERAS[idx];
+ document.querySelectorAll('.chip').forEach((c,ci)=>c.classList.toggle('on',ci===idx));
+ document.querySelectorAll('.voice-dot').forEach((b,vi)=>b.classList.toggle('on',VOICES[vi]?.ei===idx));
+ if(scroll){const ac=document.querySelectorAll('.chip')[idx];ac.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});}
+ map.classList.toggle('geo-muted',e.id!=='orientation');
+ document.getElementById('holyBtn').style.display=(e.id==='orientation')?'none':'';
+ document.getElementById('eraRange').textContent=e.range+' · '+e.cyr;
+ document.getElementById('eraName').textContent=e.name;
+ document.getElementById('counter').textContent=`${idx+1} / ${ERAS.length}`;
+ paintTerr(e);paintPower(e);paintPopulation(e);paintSlideNote(e);paintSacred(e);paintDots(e);paintNPCs(e);paintFacts(e);paintLegend(e);setFlows(e.flows);
+ document.getElementById('essence').textContent=e.essence;
+ document.getElementById('landLine').innerHTML='<span class="k">the land was called</span>'+e.land.map(([a,b])=>`<span><b>${b}</b> · ${a}</span>`).join('');
+ let h='';e.body.forEach(p=>h+=`<p>${p}</p>`);
+ if(e.bible)h+=`<div class="bible">${e.bible}</div>`;
+ if(e.gap)h+=`<div class="gap"><span class="gk">on the gap</span><p>${e.gap}</p></div>`;
+ document.getElementById('body').innerHTML=h;
+ document.getElementById('footLine').textContent=(idx===ERAS.length-1)?FOOT:'';}
+
+// glossary delegation
+document.getElementById('body').addEventListener('click',ev=>{const a=ev.target.closest('.gl');if(!a)return;
+ const k=a.dataset.g;if(!GLOSSARY[k])return;const[term,def]=GLOSSARY[k];
+ document.getElementById('gloss').innerHTML=`<div class="gtype">term</div><div class="gterm">${term}</div><div class="gdef">${def}</div>`;
+ ov.classList.add('on');document.getElementById('gsheet').classList.add('on');});
+
+// city cartouche
+const ov=document.getElementById('ov'),sheet=document.getElementById('sheet'),gsheet=document.getElementById('gsheet');
+function openCart(key){const c=CITIES[key];
+ const stack=NAME_STACKS[key]||[[`Hebrew`,c.he_tr],[`Arabic`,c.ar_tr],[`Today`,c.en]];
+ const stackHtml=`<div class="name-stack">${stack.map(([era,name])=>`<div class="stack-row"><span class="stack-era">${era}</span><span class="stack-name">${name}</span></div>`).join('')}</div>`;
+ document.getElementById('cart').innerHTML=`<div class="cart-k">place</div><div class="cart-en">${c.en}</div>
+ ${stackHtml}
+ <div class="names"><div class="nm"><span class="tag">Hebrew</span><span class="val he">${c.he}<span class="tr">${c.he_tr}</span></span></div>
+ <div class="nm"><span class="tag">Arabic</span><span class="val ar">${c.ar}<span class="tr">${c.ar_tr}</span></span></div></div>
+ <div class="cart-also"><b>Also known as:</b> ${c.also}</div><div class="cart-blurb">${c.blurb}</div>`;
+ document.querySelectorAll('.dot,.city-hit,.city-lbl').forEach(d=>d.classList.toggle('act',d.dataset.key===key));
+ ov.classList.add('on');sheet.classList.add('on');}
+function closeAll(){ov.classList.remove('on');sheet.classList.remove('on');gsheet.classList.remove('on');closeNpc();
+ document.querySelectorAll('.dot,.city-hit,.city-lbl').forEach(d=>d.classList.remove('act'));}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeAll));
+ov.addEventListener('click',closeAll);
+document.addEventListener('click',e=>{if(!npcBubble.classList.contains('on'))return;
+ if(e.target.closest('.npc-bubble,.npc,.map-fact,.sacred-node,.voice-dot,.trade-good'))return;
+ closeNpc();});
+
+document.getElementById('prev').addEventListener('click',()=>go(idx-1,true));
+document.getElementById('next').addEventListener('click',()=>go(idx+1,true));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(idx-1,true);if(e.key==='ArrowRight')go(idx+1,true);if(e.key==='Escape'){closeAll();about.classList.remove('on');}});
+
+const about=document.getElementById('about');
+document.getElementById('aboutBtn').addEventListener('click',()=>about.classList.add('on'));
+document.getElementById('aboutClose').addEventListener('click',()=>about.classList.remove('on'));
+about.addEventListener('click',e=>{if(e.target===about)about.classList.remove('on');});
+const firstHint=document.getElementById('firstHint');
+function dismissHint(){firstHint.classList.add('gone');}
+document.getElementById('fhGo').addEventListener('click',dismissHint);
+document.getElementById('fhClose').addEventListener('click',dismissHint);
+document.getElementById('holyBtn').addEventListener('click',()=>{holyOn=!holyOn;document.getElementById('holyBtn').classList.toggle('on',holyOn);paintSacred(ERAS[idx]);});
+
+go(0,true);
+</script>
+</body>
+</html>
