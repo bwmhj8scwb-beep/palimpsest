@@ -6,10 +6,6 @@ Tap cities for their names in Hebrew, Arabic, and older tongues; tap the little 
 
 It is a **schematic** guide built to be fair to a contested history, not to settle it. Borders are washes of colour, not survey lines; population flows show direction and rough scale, not exact figures; where one event carries two names (1948 above all), both are given. Colours are pigments, not flags. The present-day slide reflects events **as of early 2026** and will need updating over time.
 
-## View it
-
-It's one self-contained HTML file — no build step, no dependencies. Open `index.html` in any browser, or visit the published page (see below).
-
 
 ## License
 
