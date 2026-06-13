@@ -10,16 +10,7 @@ It is a **schematic** guide built to be fair to a contested history, not to sett
 
 It's one self-contained HTML file — no build step, no dependencies. Open `index.html` in any browser, or visit the published page (see below).
 
-## Publish on GitHub Pages
-
-1. Create a new repository (e.g. `palimpsest`).
-2. Upload `index.html` (and this `README.md`) to the repository root.
-3. Go to **Settings → Pages**.
-4. Under **Build and deployment → Source**, choose **Deploy from a branch**; pick branch **main** and folder **/ (root)**; **Save**.
-5. Wait ~1 minute, then visit `https://<your-username>.github.io/<repo-name>/`.
-
-That URL works on any phone or laptop browser — just send the link.
 
 ## License
 
-Suggested: Creative Commons **CC BY-SA 4.0** — others may adapt it freely with attribution, sharing alike.
+Creative Commons **CC BY-SA 4.0** 
